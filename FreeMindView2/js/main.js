@@ -54,7 +54,7 @@ var freemind;
     }
     function fetchXML() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch('./mm/README.mm');
+            const response = yield fetch('./mm/test.mm');
             const xmlText = yield response.text();
             mindmapData = StringToXML(xmlText); // Save xml in variable
         });
@@ -102,11 +102,13 @@ var freemind;
         }
     }
     function createCanvas() {
+        console.log("create Canvas started");
         canvas = document.createElement("canvas");
         canvas.id = "fmcanvas";
         canvas.height = window.innerHeight;
         canvas.width = window.innerWidth;
         body.appendChild(canvas);
+        console.log("body hat chilednow");
         offsetX = canvas.offsetLeft;
         offsetY = canvas.offsetTop;
         ctx = canvas.getContext("2d");
