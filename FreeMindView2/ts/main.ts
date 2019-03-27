@@ -1,4 +1,4 @@
-namespace freemind {
+namespace Freemind {
 
   interface URLObject {
     path: string;
@@ -6,12 +6,13 @@ namespace freemind {
     list: string;
   }
   window.addEventListener("load", init);
+
   let params: URLObject;
-  let body: HTMLBodyElement = document.getElementsByTagName("body")[0];
-  let list: HTMLElement;
+  //let body: HTMLBodyElement = document.getElementsByTagName("body")[0];
+  //let list: HTMLElement;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
-  let ishidden: boolean = false; // canvas sichtbar bei false
+  //let ishidden: boolean = true; // canvas sichtbar bei false
   let offsetX: number;
   let offsetY: number;
   let canvasMouseX: number;
@@ -24,6 +25,7 @@ namespace freemind {
   let docNode: Element; // document node is the first node in a xml file
   let rootNode: Element; // first actual node of the mindmap
   let fmvNodes: FMVNode[];
+
   //let url: string;
 
   function init(): void {
@@ -44,7 +46,7 @@ namespace freemind {
       docNode = mindmapData.documentElement;
       rootNode = docNode.firstElementChild;
       if (params.list == "true") {
-        createList();
+        //createList();
         console.log("bin da");
       } else if (params.list == "false" || !params.list) {
         console.log("bin woanders");
@@ -53,7 +55,10 @@ namespace freemind {
 
       }
     });
-    document.getElementById('hideit').addEventListener('click', toggleHide);
+    //document.getElementById('hideit').addEventListener('click', toggleHide);
+    window.addEventListener('resize', resizecanvas, false);
+
+
   }
   async function fetchXML(): Promise<void> {
     const response: Response = await fetch('./mm/test.mm');
@@ -67,57 +72,14 @@ namespace freemind {
     return new DOMParser().parseFromString(xString, "text/xml");
   }
 
-  function createList(): void {
-    let headline: HTMLElement = document.createElement("h1");
-    headline.innerHTML = rootNode.getAttribute("TEXT");
-    body.appendChild(headline);
-    list = document.createElement("div");
-
-    createListElements(rootNode, list);
-
-    body.appendChild(list);
-  }
-
-  function createListElements(root: Element, parent: Element): void {
-    if (root.hasChildNodes) {
-      let ul: HTMLElement = document.createElement("ul");
-
-      parent.appendChild(ul);
-      let children: Element[] = getChildElements(root);
-
-      for (let i: number = 0; i < children.length; i++) {
-        let li: HTMLElement = document.createElement("li");
-        li.innerHTML = children[i].getAttribute("TEXT");
-        ul.appendChild(li);
-
-        if (children[i].childElementCount > 0) {
-          //li.addEventListener("click", toggleHide);
-          createListElements(children[i], li);
-        }
-      }
-    } else {
-      return;
-    }
-  }
-
-  // adds hide style class to first child element
-  function toggleHide(): void {
-    if (ishidden) {
-      document.getElementById('fmcanvas').style.display = 'none';
-      ishidden = false;
-    } else {
-      document.getElementById('fmcanvas').style.display = 'visible';
-      ishidden = true;
-    }
-  }
-
   function createCanvas(): void {
     console.log("create Canvas started");
-    canvas = document.createElement("canvas");
-    canvas.id = "fmcanvas";
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    body.appendChild(canvas);
+    canvas = document.getElementsByTagName("canvas")[0];
+    /* canvas = document.createElement("canvas");
+    canvas.id = "fmcanvas"; */
+    canvas.setAttribute("height", "window.innerHeight");
+    canvas.setAttribute("width", "window.innerWidth");
+    //body.appendChild(canvas);
     console.log("body hat chilednow");
     offsetX = canvas.offsetLeft;
     offsetY = canvas.offsetTop;
@@ -140,8 +102,30 @@ namespace freemind {
     canvas.addEventListener("touchstart", handleTouchstart);
     canvas.addEventListener("touchmove", handleTouchmove);
     canvas.addEventListener("touchend", handleTouchend);
-    ctx.fillStyle = "#443422";
-    ctx.fill;
+    canvas.addEventListener("keyboardinput", keyboardInput)
+    canvas.addEventListener('click', cords);
+  }
+  function resizecanvas(): void {
+    createCanvas();
+  }
+
+  function cords(event: MouseEvent): void {
+    console.log(event.offsetX, event.offsetY);
+    //bullet.
+    let x = event.pageX;
+    let y = event.pageY;
+
+    createNewEntry(x, y);
+
+  }
+  function createNewEntry(_x: number, _y: number) {
+    console.log("did i hit something?");
+    for (let i: number; i < fmvNodes.length; i++) {
+      console.log(`i ${i}`)
+      if (ctx.isPointInPath(fmvNodes[i].pfadrect, _x, _y)) {
+        console.log(fmvNodes[i].content + " something has been clicked");
+      }
+    }
   }
 
   function createMindmap(): void {
@@ -153,15 +137,23 @@ namespace freemind {
       null,
       ctx,
       rootNode.getAttribute("TEXT"),
-      "root"
+      "root",
+      false
     );
     fmvNodes.push(root);
-    root.drawFMVNode();
 
     // Use root FMVNode as starting point and create all subFMVNodes
     createFMVNodes(rootNode, root);
-
     console.log(fmvNodes);
+    root.calculateVisibleChildren();console.log("calculated");
+    root.setPosition(0);
+    //root.drawFMVNode();
+    console.log("setpositon");
+    for (let i: number = 0; i < fmvNodes.length; i++) {
+      fmvNodes[i].drawFMVNode();
+      console.log(i);
+    }
+    console.log(fmvNodes, " fmvNodes");
   }
 
   function createFMVNodes(rootNode: Element, parentFMVNode: FMVNode): void {
@@ -176,34 +168,28 @@ namespace freemind {
         if (children[i].parentElement == rootNode) {
           let fmvNodeContent: string = children[i].getAttribute("TEXT");
           let fmvNodeMapPosition: string = children[i].getAttribute("POSITION");
+
           if (fmvNodeMapPosition == null) {
             fmvNodeMapPosition = parentFMVNode.mapPosition;
           }
-
+          console.log(fmvNodeMapPosition + " 11 position");
+          let fmvNodeFolded: string = children[i].getAttribute("FOLDED");
+          let fmvNodeFoldedBool: boolean = fmvNodeFolded == "true" ? true : false;
           let fmvNode: FMVNode = new FMVNode(
             parentFMVNode,
             ctx,
             fmvNodeContent,
-            fmvNodeMapPosition
+            fmvNodeMapPosition,
+            fmvNodeFoldedBool
           );
           childFMVNodes.push(fmvNode);
           fmvNodes.push(fmvNode);
+          parentFMVNode.children = childFMVNodes;
 
           // do it all again for all the children of rootNode
           createFMVNodes(children[i], fmvNode);
         }
       }
-
-      // set all current FMVNodes as siblings of each other
-      for (let i: number = 0; i < childFMVNodes.length; i++) {
-        childFMVNodes[i].siblings = childFMVNodes;
-        childFMVNodes[i].drawFMVNode();
-      }
-
-      /* // draw all FMVNodes
-      for (let i: number = 0; i < childFMVNodes.length; i++) {
-        childFMVNodes[i].drawFMVNode();
-      } */
     } else {
       return;
     }
@@ -214,12 +200,13 @@ namespace freemind {
     let childElements: Element[] = new Array();
     // get all children of parent as Element collection. Gets ALL children!
     childElementsCollection = parent.getElementsByTagName("node");
-
+    console.log(childElementsCollection.length + "child elementcollection length");
     for (let i: number = 0; i < childElementsCollection.length; i++) {
       if (childElementsCollection[i].parentElement == parent) {
         // save only the children with correct parent element
         childElements.push(childElementsCollection[i]);
       }
+
     }
 
     return childElements;
@@ -269,19 +256,31 @@ namespace freemind {
     // user has left the canvas, so clear the drag flag
     isDragging = false;
   }
+  function keyboardInput(e: KeyboardEvent): void {
+    let type: string = e.type;
+    let key: string = e.key;
+    let code: string = e.code;
 
+    console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
+  }
   function handleMouseMove(e: MouseEvent): void {
-    canvasMouseX = e.clientX - offsetX;
-    canvasMouseY = e.clientY - offsetY;
-    // if the drag flag is set, clear the canvas and draw new
+
+    let dragOffsetX = canvas.getBoundingClientRect().left;
+    let dragOffsetY = canvas.getBoundingClientRect().top;
+    canvasMouseX = e.clientX - dragOffsetX;
+    canvasMouseY = e.clientY - dragOffsetY;
     if (isDragging) {
+      console.log("is dragging around");
       clearMap();
-      middleX = canvasMouseX;
-      middleY = canvasMouseY;
-      createMindmap();
+      middleX = canvasMouseX //+ relX;
+      middleY = canvasMouseY //+ relY;
+      fmvNodes[0].setPosition(0);
+      for (let i: number = 0; i < fmvNodes.length; i++) {
+        fmvNodes[i].drawFMVNode();
+        console.log(i);
+      }
     }
   }
-
   function clearMap(): void {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
   }

@@ -6,15 +6,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var freemind;
-(function (freemind) {
+var Freemind;
+(function (Freemind) {
     window.addEventListener("load", init);
     let params;
-    let body = document.getElementsByTagName("body")[0];
-    let list;
+    //let body: HTMLBodyElement = document.getElementsByTagName("body")[0];
+    //let list: HTMLElement;
     let canvas;
     let ctx;
-    let ishidden = false; // canvas sichtbar bei false
+    //let ishidden: boolean = true; // canvas sichtbar bei false
     let offsetX;
     let offsetY;
     let canvasMouseX;
@@ -41,7 +41,7 @@ var freemind;
             docNode = mindmapData.documentElement;
             rootNode = docNode.firstElementChild;
             if (params.list == "true") {
-                createList();
+                //createList();
                 console.log("bin da");
             }
             else if (params.list == "false" || !params.list) {
@@ -50,7 +50,8 @@ var freemind;
                 createMindmap();
             }
         });
-        document.getElementById('hideit').addEventListener('click', toggleHide);
+        //document.getElementById('hideit').addEventListener('click', toggleHide);
+        window.addEventListener('resize', resizecanvas, false);
     }
     function fetchXML() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -63,51 +64,14 @@ var freemind;
     function StringToXML(xString) {
         return new DOMParser().parseFromString(xString, "text/xml");
     }
-    function createList() {
-        let headline = document.createElement("h1");
-        headline.innerHTML = rootNode.getAttribute("TEXT");
-        body.appendChild(headline);
-        list = document.createElement("div");
-        createListElements(rootNode, list);
-        body.appendChild(list);
-    }
-    function createListElements(root, parent) {
-        if (root.hasChildNodes) {
-            let ul = document.createElement("ul");
-            parent.appendChild(ul);
-            let children = getChildElements(root);
-            for (let i = 0; i < children.length; i++) {
-                let li = document.createElement("li");
-                li.innerHTML = children[i].getAttribute("TEXT");
-                ul.appendChild(li);
-                if (children[i].childElementCount > 0) {
-                    //li.addEventListener("click", toggleHide);
-                    createListElements(children[i], li);
-                }
-            }
-        }
-        else {
-            return;
-        }
-    }
-    // adds hide style class to first child element
-    function toggleHide() {
-        if (ishidden) {
-            document.getElementById('fmcanvas').style.display = 'none';
-            ishidden = false;
-        }
-        else {
-            document.getElementById('fmcanvas').style.display = 'visible';
-            ishidden = true;
-        }
-    }
     function createCanvas() {
         console.log("create Canvas started");
-        canvas = document.createElement("canvas");
-        canvas.id = "fmcanvas";
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
-        body.appendChild(canvas);
+        canvas = document.getElementsByTagName("canvas")[0];
+        /* canvas = document.createElement("canvas");
+        canvas.id = "fmcanvas"; */
+        canvas.setAttribute("height", "window.innerHeight");
+        canvas.setAttribute("width", "window.innerWidth");
+        //body.appendChild(canvas);
         console.log("body hat chilednow");
         offsetX = canvas.offsetLeft;
         offsetY = canvas.offsetTop;
@@ -116,8 +80,8 @@ var freemind;
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
         // determine the center of the canvas
-        freemind.middleX = ctx.canvas.width / 2;
-        freemind.middleY = ctx.canvas.height / 2;
+        Freemind.middleX = ctx.canvas.width / 2;
+        Freemind.middleY = ctx.canvas.height / 2;
         // Eventlistener for draggable canvas
         canvas.addEventListener("mousedown", handleMouseDown);
         canvas.addEventListener("mousemove", handleMouseMove);
@@ -126,19 +90,47 @@ var freemind;
         canvas.addEventListener("touchstart", handleTouchstart);
         canvas.addEventListener("touchmove", handleTouchmove);
         canvas.addEventListener("touchend", handleTouchend);
-        ctx.fillStyle = "#443422";
-        ctx.fill;
+        canvas.addEventListener("keyboardinput", keyboardInput);
+        canvas.addEventListener('click', cords);
+    }
+    function resizecanvas() {
+        createCanvas();
+    }
+    function cords(event) {
+        console.log(event.offsetX, event.offsetY);
+        //bullet.
+        let x = event.pageX;
+        let y = event.pageY;
+        createNewEntry(x, y);
+    }
+    function createNewEntry(_x, _y) {
+        console.log("did i hit something?");
+        for (let i; i < fmvNodes.length; i++) {
+            console.log(`i ${i}`);
+            if (ctx.isPointInPath(fmvNodes[i].pfadrect, _x, _y)) {
+                console.log(fmvNodes[i].content + " something has been clicked");
+            }
+        }
     }
     function createMindmap() {
         clearMap();
         fmvNodes.length = 0;
         // create root FMVNode
-        let root = new freemind.FMVNode(null, ctx, rootNode.getAttribute("TEXT"), "root");
+        let root = new Freemind.FMVNode(null, ctx, rootNode.getAttribute("TEXT"), "root", false);
         fmvNodes.push(root);
-        root.drawFMVNode();
         // Use root FMVNode as starting point and create all subFMVNodes
         createFMVNodes(rootNode, root);
         console.log(fmvNodes);
+        root.calculateVisibleChildren();
+        console.log("calculated");
+        root.setPosition(0);
+        //root.drawFMVNode();
+        console.log("setpositon");
+        for (let i = 0; i < fmvNodes.length; i++) {
+            fmvNodes[i].drawFMVNode();
+            console.log(i);
+        }
+        console.log(fmvNodes, " fmvNodes");
     }
     function createFMVNodes(rootNode, parentFMVNode) {
         // only continue if current root has children
@@ -154,22 +146,17 @@ var freemind;
                     if (fmvNodeMapPosition == null) {
                         fmvNodeMapPosition = parentFMVNode.mapPosition;
                     }
-                    let fmvNode = new freemind.FMVNode(parentFMVNode, ctx, fmvNodeContent, fmvNodeMapPosition);
+                    console.log(fmvNodeMapPosition + " 11 position");
+                    let fmvNodeFolded = children[i].getAttribute("FOLDED");
+                    let fmvNodeFoldedBool = fmvNodeFolded == "true" ? true : false;
+                    let fmvNode = new Freemind.FMVNode(parentFMVNode, ctx, fmvNodeContent, fmvNodeMapPosition, fmvNodeFoldedBool);
                     childFMVNodes.push(fmvNode);
                     fmvNodes.push(fmvNode);
+                    parentFMVNode.children = childFMVNodes;
                     // do it all again for all the children of rootNode
                     createFMVNodes(children[i], fmvNode);
                 }
             }
-            // set all current FMVNodes as siblings of each other
-            for (let i = 0; i < childFMVNodes.length; i++) {
-                childFMVNodes[i].siblings = childFMVNodes;
-                childFMVNodes[i].drawFMVNode();
-            }
-            /* // draw all FMVNodes
-            for (let i: number = 0; i < childFMVNodes.length; i++) {
-              childFMVNodes[i].drawFMVNode();
-            } */
         }
         else {
             return;
@@ -180,6 +167,7 @@ var freemind;
         let childElements = new Array();
         // get all children of parent as Element collection. Gets ALL children!
         childElementsCollection = parent.getElementsByTagName("node");
+        console.log(childElementsCollection.length + "child elementcollection length");
         for (let i = 0; i < childElementsCollection.length; i++) {
             if (childElementsCollection[i].parentElement == parent) {
                 // save only the children with correct parent element
@@ -205,8 +193,8 @@ var freemind;
         // if the drag flag is set, clear the canvas and draw new
         if (isDragging) {
             clearMap();
-            freemind.middleX = canvasMouseX;
-            freemind.middleY = canvasMouseY;
+            Freemind.middleX = canvasMouseX;
+            Freemind.middleY = canvasMouseY;
             createMindmap();
         }
     }
@@ -227,15 +215,27 @@ var freemind;
         // user has left the canvas, so clear the drag flag
         isDragging = false;
     }
+    function keyboardInput(e) {
+        let type = e.type;
+        let key = e.key;
+        let code = e.code;
+        console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
+    }
     function handleMouseMove(e) {
-        canvasMouseX = e.clientX - offsetX;
-        canvasMouseY = e.clientY - offsetY;
-        // if the drag flag is set, clear the canvas and draw new
+        let dragOffsetX = canvas.getBoundingClientRect().left;
+        let dragOffsetY = canvas.getBoundingClientRect().top;
+        canvasMouseX = e.clientX - dragOffsetX;
+        canvasMouseY = e.clientY - dragOffsetY;
         if (isDragging) {
+            console.log("is dragging around");
             clearMap();
-            freemind.middleX = canvasMouseX;
-            freemind.middleY = canvasMouseY;
-            createMindmap();
+            Freemind.middleX = canvasMouseX; //+ relX;
+            Freemind.middleY = canvasMouseY; //+ relY;
+            fmvNodes[0].setPosition(0);
+            for (let i = 0; i < fmvNodes.length; i++) {
+                fmvNodes[i].drawFMVNode();
+                console.log(i);
+            }
         }
     }
     function clearMap() {
@@ -258,5 +258,5 @@ var freemind;
             return JSON.parse("{}");
         }
     }
-})(freemind || (freemind = {}));
+})(Freemind || (Freemind = {}));
 //# sourceMappingURL=main.js.map
