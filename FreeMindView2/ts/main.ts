@@ -13,18 +13,14 @@ namespace Freemind {
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
   //let ishidden: boolean = true; // canvas sichtbar bei false
-  let offsetX: number;
-  let offsetY: number;
-  let canvasMouseX: number;
-  let canvasMouseY: number;
-  let isDragging: boolean = false;
 
-  export let middleX: number;
-  export let middleY: number;
+  export let rootNodeX: number;
+  export let rootNodeY: number;
   let mindmapData: XMLDocument;
   let docNode: Element; // document node is the first node in a xml file
   let rootNode: Element; // first actual node of the mindmap
   let fmvNodes: FMVNode[];
+  let hasMouseBeenMoved: boolean = false;
 
   //let url: string;
 
@@ -73,16 +69,13 @@ namespace Freemind {
   }
 
   function createCanvas(): void {
-    console.log("create Canvas started");
+
     canvas = document.getElementsByTagName("canvas")[0];
     /* canvas = document.createElement("canvas");
     canvas.id = "fmcanvas"; */
     canvas.setAttribute("height", "window.innerHeight");
     canvas.setAttribute("width", "window.innerWidth");
     //body.appendChild(canvas);
-    console.log("body hat chilednow");
-    offsetX = canvas.offsetLeft;
-    offsetY = canvas.offsetTop;
 
     ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
 
@@ -91,41 +84,22 @@ namespace Freemind {
     ctx.canvas.height = window.innerHeight;
 
     // determine the center of the canvas
-    middleX = ctx.canvas.width / 2;
-    middleY = ctx.canvas.height / 2;
+    rootNodeX = ctx.canvas.width / 2;
+    rootNodeY = ctx.canvas.height / 2;
 
     // Eventlistener for draggable canvas
-    canvas.addEventListener("mousedown", handleMouseDown);
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseup", handleMouseUp);
-    canvas.addEventListener("mouseout", handleMouseOut);
-    canvas.addEventListener("touchstart", handleTouchstart);
-    canvas.addEventListener("touchmove", handleTouchmove);
-    canvas.addEventListener("touchend", handleTouchend);
+    //canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mousemove", onpointermove);
+    canvas.addEventListener("mousedown", onMouseDown);
+    canvas.addEventListener("mouseup", onMouseUp);
     canvas.addEventListener("keyboardinput", keyboardInput)
-    canvas.addEventListener('click', cords);
+
   }
   function resizecanvas(): void {
     createCanvas();
-  }
 
-  function cords(event: MouseEvent): void {
-    console.log(event.offsetX, event.offsetY);
-    //bullet.
-    let x = event.pageX;
-    let y = event.pageY;
+    fmvNodes[0].drawFMVNode();
 
-    createNewEntry(x, y);
-
-  }
-  function createNewEntry(_x: number, _y: number) {
-    console.log("did i hit something?");
-    for (let i: number; i < fmvNodes.length; i++) {
-      console.log(`i ${i}`)
-      if (ctx.isPointInPath(fmvNodes[i].pfadrect, _x, _y)) {
-        console.log(fmvNodes[i].content + " something has been clicked");
-      }
-    }
   }
 
   function createMindmap(): void {
@@ -144,16 +118,12 @@ namespace Freemind {
 
     // Use root FMVNode as starting point and create all subFMVNodes
     createFMVNodes(rootNode, root);
-    console.log(fmvNodes);
-    root.calculateVisibleChildren();console.log("calculated");
+    root.calculateVisibleChildren();
     root.setPosition(0);
-    //root.drawFMVNode();
-    console.log("setpositon");
-    for (let i: number = 0; i < fmvNodes.length; i++) {
-      fmvNodes[i].drawFMVNode();
-      console.log(i);
-    }
+    root.drawFMVNode();
     console.log(fmvNodes, " fmvNodes");
+
+
   }
 
   function createFMVNodes(rootNode: Element, parentFMVNode: FMVNode): void {
@@ -172,7 +142,7 @@ namespace Freemind {
           if (fmvNodeMapPosition == null) {
             fmvNodeMapPosition = parentFMVNode.mapPosition;
           }
-          console.log(fmvNodeMapPosition + " 11 position");
+
           let fmvNodeFolded: string = children[i].getAttribute("FOLDED");
           let fmvNodeFoldedBool: boolean = fmvNodeFolded == "true" ? true : false;
           let fmvNode: FMVNode = new FMVNode(
@@ -212,50 +182,47 @@ namespace Freemind {
     return childElements;
   }
 
-  // touch drag handlers
-  function handleTouchstart(e: TouchEvent): void {
-    canvasMouseX = e.touches[0].clientX - offsetX;
-    canvasMouseY = e.touches[0].clientY - offsetY;
-    isDragging = true;
+  function onMouseDown(_event: MouseEvent): void {
+    hasMouseBeenMoved = false;
   }
-
-  function handleTouchend(e: TouchEvent): void {
-    canvasMouseX = e.touches[0].clientX - offsetX;
-    canvasMouseY = e.touches[0].clientY - offsetY;
-    isDragging = true;
-  }
-
-  function handleTouchmove(e: TouchEvent): void {
-    canvasMouseX = e.touches[0].clientX - offsetX;
-    canvasMouseY = e.touches[0].clientY - offsetY;
-    // if the drag flag is set, clear the canvas and draw new
-    if (isDragging) {
-      clearMap();
-      middleX = canvasMouseX;
-      middleY = canvasMouseY;
-      createMindmap();
+  function onMouseUp(_event: MouseEvent): void {
+    if (hasMouseBeenMoved) {
+      return;
+    }
+    console.log("mausnichtbewegt");
+    if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
+      for (let i: number = 0; i < fmvNodes.length; i++) {
+        fmvNodes[i].folded = false;
+        fmvNodes[0].calculateVisibleChildren();
+        redrawWithoutChildren();
+      }
+    } else {
+      for (let i: number = 0; i < fmvNodes.length; i++) {
+        if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
+          fmvNodes[i].folded = !fmvNodes[i].folded;
+          fmvNodes[0].calculateVisibleChildren();
+          redrawWithoutChildren();
+        }
+      }
     }
   }
 
-  // mouse drag handlers
-  function handleMouseDown(e: MouseEvent): void {
-    canvasMouseX = e.clientX - offsetX;
-    canvasMouseY = e.clientY - offsetY;
-    isDragging = true;
-  }
 
-  function handleMouseUp(e: MouseEvent): void {
-    canvasMouseX = e.clientX - offsetX;
-    canvasMouseY = e.clientY - offsetY;
-    isDragging = false;
+  function redrawWithoutChildren() {
+    clearMap();
+    fmvNodes[0].setPosition(0);
+    fmvNodes[0].drawFMVNode();
   }
+  /*  function createNewEntry(_x: number, _y: number) {
+ 
+     for (let i: number; i < fmvNodes.length; i++) {
+       console.log(fmvNodes[i].pfadrect);
+       if (ctx.isPointInPath(fmvNodes[i].pfadrect, _x, _y)) {
+         console.log("new entry possible");
+       }
+     }
+   } */
 
-  function handleMouseOut(e: MouseEvent): void {
-    canvasMouseX = e.clientX - offsetX;
-    canvasMouseY = e.clientY - offsetY;
-    // user has left the canvas, so clear the drag flag
-    isDragging = false;
-  }
   function keyboardInput(e: KeyboardEvent): void {
     let type: string = e.type;
     let key: string = e.key;
@@ -263,22 +230,13 @@ namespace Freemind {
 
     console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
   }
-  function handleMouseMove(e: MouseEvent): void {
+  function onpointermove(_event: MouseEvent): void {
+    hasMouseBeenMoved = true;
 
-    let dragOffsetX = canvas.getBoundingClientRect().left;
-    let dragOffsetY = canvas.getBoundingClientRect().top;
-    canvasMouseX = e.clientX - dragOffsetX;
-    canvasMouseY = e.clientY - dragOffsetY;
-    if (isDragging) {
-      console.log("is dragging around");
-      clearMap();
-      middleX = canvasMouseX //+ relX;
-      middleY = canvasMouseY //+ relY;
-      fmvNodes[0].setPosition(0);
-      for (let i: number = 0; i < fmvNodes.length; i++) {
-        fmvNodes[i].drawFMVNode();
-        console.log(i);
-      }
+    if (_event.buttons == 1) {
+      rootNodeY += _event.movementY;
+      rootNodeX += _event.movementX;
+      redrawWithoutChildren();
     }
   }
   function clearMap(): void {

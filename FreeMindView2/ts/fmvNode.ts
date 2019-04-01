@@ -2,20 +2,23 @@ namespace Freemind {
 
     export class FMVNode {
         public pfadrect: Path2D;
-
         public parent: FMVNode;
         public children: FMVNode[];
         public ctx: CanvasRenderingContext2D;
         public content: string;
-        public weightVisibleChildren: number;
+        public weightVisibleChildrenRight: number;
+        public weightVisibleChildrenLeft: number;
         public posX: number;
         public posY: number;
-        public leftBorder: number;
-        public rightBorder: number;
+        public bezPtX1: number = 30;
+        public bezPtX2: number = 30;
+        public bezPtY1: number = 0;
+        public bezPtY2: number = 0;
+
         public mapPosition: string;
         public childNumber: number;
         public folded: boolean;
-       
+        public childHight: number = 30;
 
 
         constructor(
@@ -33,13 +36,9 @@ namespace Freemind {
             this.folded = folded;
 
             if (this.parent == null) {
-                console.log("Choosing '" + this.content + "' as root node");
+
                 this.mapPosition = "root";
             }
-
-            // left and right sides of the FMVNode
-            this.leftBorder = this.content.length - 20;
-            this.rightBorder = this.content.length + 20;
         }
 
         setPosition(_previousSiblingsWeight: number): void {
@@ -47,75 +46,101 @@ namespace Freemind {
 
             // place root node in the center of the canvas
             if (this.mapPosition == "root") {
-                this.posX = middleX;
-                this.posY = middleY;
+                this.posX = rootNodeX;
+                this.posY = rootNodeY;
             }
             if (this.mapPosition == "right") {
-                this.posX = this.parent.posX + this.parent.content.length * 10;
-                let gesamtHoehe: number = this.weightVisibleChildren * 30;
-                let obersterPunkt: number = this.parent.posY - (gesamtHoehe / 2) + (30 / 2);
-                let yPx: number = obersterPunkt + _previousSiblingsWeight * 30 + this.weightVisibleChildren * 30 / 2 - 30 / 2;
-                this.posY = yPx;
+                this.posX = this.parent.posX + this.parent.content.length * 7 + 70;
+                this.posY = this.calculateHighestPoint(this.parent.posY, this.parent.weightVisibleChildrenRight, this.childHight, _previousSiblingsWeight, this.weightVisibleChildrenRight);
             }
-            let weightPreviousSiblings: number = 0;
+            if (this.mapPosition == "left") {
+                this.posX = this.parent.posX - this.parent.content.length * 7 - 70;
+                this.posY = this.calculateHighestPoint(this.parent.posY, this.parent.weightVisibleChildrenLeft, this.childHight, _previousSiblingsWeight, this.weightVisibleChildrenLeft);
+            }
+            let weightPreviousSiblingsRight: number = 0;
+            let weightPreviousSiblingsLeft: number = 0;
             for (let i: number = 0; i < this.children.length; i++) {
-                this.children[i].setPosition(weightPreviousSiblings);
-                weightPreviousSiblings += this.children[i].weightVisibleChildren;
+                if (this.children[i].mapPosition == "right") {
+                    this.children[i].setPosition(weightPreviousSiblingsRight);
+                    weightPreviousSiblingsRight += this.children[i].weightVisibleChildrenRight;
+
+                } else {
+                    this.children[i].setPosition(weightPreviousSiblingsLeft);
+                    weightPreviousSiblingsLeft += this.children[i].weightVisibleChildrenLeft;
+                }
             }
-
-
-
+        }
+        calculateHighestPoint(_parentPositionY: number, _parentWeightVisibleChildren: number, _childHight: number, _previousSiblingsWeight: number, _weightVisibleChildren: number): number {
+            let highestPoint: number = _parentPositionY - _parentWeightVisibleChildren * _childHight / 2 + (_childHight / 2);
+            let yPx: number = highestPoint + _previousSiblingsWeight * _childHight + (_weightVisibleChildren * _childHight) / 2 - (_childHight / 2);
+            this.posY = yPx;
+            return yPx;
         }
         calculateVisibleChildren(): number {
             if (this.children.length <= 0 || this.folded) {
-                this.weightVisibleChildren = 1;
+                if (this.mapPosition == "right")
+                    this.weightVisibleChildrenRight = 1;
+                else
+                    this.weightVisibleChildrenLeft = 1;
                 return 1;
-
             }
-            this.weightVisibleChildren = 0;
+            this.weightVisibleChildrenRight = 0;
+            this.weightVisibleChildrenLeft = 0;
             for (let child of this.children) {
-                this.weightVisibleChildren += child.calculateVisibleChildren();
+                if (child.mapPosition == "right")
+                    this.weightVisibleChildrenRight += child.calculateVisibleChildren();
+                else
+                    this.weightVisibleChildrenLeft += child.calculateVisibleChildren();
+
+                console.log(` mapposi ${child.mapPosition}`);
             }
-            return this.weightVisibleChildren;
+
+            if (this.mapPosition == "right")
+                return this.weightVisibleChildrenRight;
+            return this.weightVisibleChildrenLeft;
         }
 
         drawFMVNode(): void {
             if (this.mapPosition == "root") {
                 this.ctx.beginPath();
                 this.ctx.ellipse(this.posX, this.posY, this.content.length * 5, this.content.length, 0, 0, 2 * Math.PI);
-
+                this.pfadrect = new Path2D();
+                this.pfadrect.rect(rootNodeX + this.content.length * 7.2 / 2, rootNodeY + 5, this.content.length * -7.2, -25);
                 this.ctx.stroke();
                 this.ctx.closePath();
 
             } else {
                 let startX: number;
-                let endX: number;
+
+                //rectangles um den text
                 if (this.mapPosition == "left") {
                     startX = this.posX;
-                    endX = this.parent.leftBorder;
-                    console.log("left");
-                    console.log("drawing rect");
-                    this.pfadrect = new Path2D;
-                    this.pfadrect.rect(startX, this.posY + 5, this.content.length * -7, -25);
-                    this.ctx.stroke(this.pfadrect);
+
+                    this.pfadrect = new Path2D();
+                    this.pfadrect.rect(startX, this.posY + 5, this.content.length * -7.2, -25);
+                    //this.ctx.stroke(this.pfadrect);
                 } else if (this.mapPosition == "right") {
                     startX = this.posX;
-                    endX = this.parent.posX;
-                    console.log("right");
-                    console.log("drawing rect");
                     this.pfadrect = new Path2D();
-                    this.pfadrect.rect(startX, this.posY + 5, this.content.length * 9, -25);
-                    this.ctx.stroke(this.pfadrect);
+                    this.pfadrect.rect(startX, this.posY + 5, this.content.length * 7.2, -25);
+                    //this.ctx.stroke(this.pfadrect);
                 }
-
-
-
+                // verbindungslinie von kasten zu kasten
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.posX, this.posY);
-                if (this.parent.mapPosition == "root") {
+                if (this.parent.mapPosition == "root" && this.mapPosition == "right") {
                     this.ctx.lineTo(this.parent.posX + this.parent.content.length * 5, this.parent.posY);
+                } else if (this.parent.mapPosition == "root" && this.mapPosition == "left") {
+                    this.ctx.lineTo(this.parent.posX + this.parent.content.length * -5, this.parent.posY);
+                } else if (this.mapPosition == "right") {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.posX, this.posY);
+                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * 7 + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * 7, this.parent.posY);
                 } else {
-                    this.ctx.lineTo(this.parent.posX + this.parent.content.length * 9, this.parent.posY);
+                    //this.ctx.lineTo(this.parent.posX + this.parent.content.length * -7, this.parent.posY);
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.posX, this.posY);
+                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -7 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -7, this.parent.posY);
                 }
                 this.ctx.stroke();
                 this.ctx.closePath();
@@ -127,12 +152,17 @@ namespace Freemind {
             this.ctx.fillStyle = "black";
             if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
-            } else {
+            } else if (this.mapPosition == "right") {
                 this.ctx.textAlign = "left";
+            } else {
+                this.ctx.textAlign = "right";
             }
             this.ctx.fillText(this.content, this.posX, this.posY);
             this.ctx.closePath();
-            console.log("FMVNode '" + this.content + "' created");
+
+            for (let i: number = 0; this.children.length > i && !this.folded; i++) {
+                this.children[i].drawFMVNode();
+            }
         }
     }
 }
