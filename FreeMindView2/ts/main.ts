@@ -43,9 +43,9 @@ namespace Freemind {
       rootNode = docNode.firstElementChild;
       if (params.list == "true") {
         //createList();
-        console.log("bin da");
+        
       } else if (params.list == "false" || !params.list) {
-        console.log("bin woanders");
+        
         createCanvas();
         createMindmap();
 
@@ -92,7 +92,9 @@ namespace Freemind {
     canvas.addEventListener("mousemove", onpointermove);
     canvas.addEventListener("mousedown", onMouseDown);
     canvas.addEventListener("mouseup", onMouseUp);
-    canvas.addEventListener("keyboardinput", keyboardInput)
+    canvas.addEventListener("keyboardinput", keyboardInput);
+    //canvas.addEventListener("touchmove", pointerInputType);
+    //  canvas.addEventListener("touchend",)
 
   }
   function resizecanvas(): void {
@@ -181,7 +183,28 @@ namespace Freemind {
 
     return childElements;
   }
+  function redrawWithoutChildren() {
+    clearMap();
+    fmvNodes[0].setPosition(0);
+    fmvNodes[0].drawFMVNode();
+  }
+  /*  function createNewEntry(_x: number, _y: number) {
+ 
+     for (let i: number; i < fmvNodes.length; i++) {
+       console.log(fmvNodes[i].pfadrect);
+       if (ctx.isPointInPath(fmvNodes[i].pfadrect, _x, _y)) {
+         console.log("new entry possible");
+       }
+     }
+   } */
 
+  function keyboardInput(e: KeyboardEvent): void {
+    let type: string = e.type;
+    let key: string = e.key;
+    let code: string = e.code;
+
+    console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
+  }
   function onMouseDown(_event: MouseEvent): void {
     hasMouseBeenMoved = false;
   }
@@ -206,37 +229,27 @@ namespace Freemind {
       }
     }
   }
-
-
-  function redrawWithoutChildren() {
-    clearMap();
-    fmvNodes[0].setPosition(0);
-    fmvNodes[0].drawFMVNode();
-  }
-  /*  function createNewEntry(_x: number, _y: number) {
- 
-     for (let i: number; i < fmvNodes.length; i++) {
-       console.log(fmvNodes[i].pfadrect);
-       if (ctx.isPointInPath(fmvNodes[i].pfadrect, _x, _y)) {
-         console.log("new entry possible");
-       }
-     }
-   } */
-
-  function keyboardInput(e: KeyboardEvent): void {
-    let type: string = e.type;
-    let key: string = e.key;
-    let code: string = e.code;
-
-    console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
-  }
   function onpointermove(_event: MouseEvent): void {
     hasMouseBeenMoved = true;
-
+    console.log(_event.buttons);
+    console.log(_event.type);
     if (_event.buttons == 1) {
       rootNodeY += _event.movementY;
       rootNodeX += _event.movementX;
       redrawWithoutChildren();
+    }
+  }
+  function pointerMove(_event: PointerEvent): void {
+
+    switch (_event.type) {
+      case "touchmove":
+      console.log("tried to move");
+        rootNodeY += _event.movementY;
+        rootNodeX += _event.movementX;
+        redrawWithoutChildren();
+        break;
+      default:
+        console.log(_event.type);
     }
   }
   function clearMap(): void {

@@ -92,7 +92,7 @@ namespace Freemind {
                 else
                     this.weightVisibleChildrenLeft += child.calculateVisibleChildren();
 
-                console.log(` mapposi ${child.mapPosition}`);
+                
             }
 
             if (this.mapPosition == "right")

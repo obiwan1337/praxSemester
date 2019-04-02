@@ -65,7 +65,6 @@ var Freemind;
                     this.weightVisibleChildrenRight += child.calculateVisibleChildren();
                 else
                     this.weightVisibleChildrenLeft += child.calculateVisibleChildren();
-                console.log(` mapposi ${child.mapPosition}`);
             }
             if (this.mapPosition == "right")
                 return this.weightVisibleChildrenRight;
