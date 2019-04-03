@@ -12,6 +12,7 @@ namespace Freemind {
   //let list: HTMLElement;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
+
   //let ishidden: boolean = true; // canvas sichtbar bei false
 
   export let rootNodeX: number;
@@ -43,9 +44,9 @@ namespace Freemind {
       rootNode = docNode.firstElementChild;
       if (params.list == "true") {
         //createList();
-        
+
       } else if (params.list == "false" || !params.list) {
-        
+
         createCanvas();
         createMindmap();
 
@@ -60,7 +61,7 @@ namespace Freemind {
     const response: Response = await fetch('./mm/test.mm');
 
     const xmlText: string = await response.text();
-    mindmapData = StringToXML(xmlText); // Save xml in variable
+    mindmapData = StringToXML(xmlText); // Save xml in letiable
   }
 
   // parses a string to XML
@@ -89,11 +90,14 @@ namespace Freemind {
 
     // Eventlistener for draggable canvas
     //canvas.addEventListener("mousedown", handleMouseDown);
-    canvas.addEventListener("mousemove", onpointermove);
+    canvas.addEventListener("mousemove", onPointerMove);
     canvas.addEventListener("mousedown", onMouseDown);
     canvas.addEventListener("mouseup", onMouseUp);
     canvas.addEventListener("keyboardinput", keyboardInput);
-    //canvas.addEventListener("touchmove", pointerInputType);
+    canvas.addEventListener("touchstart", handleStart, false);
+    canvas.addEventListener("touchend", handleEnd, false);
+    canvas.addEventListener("touchcancel", handleCancel, false);
+    canvas.addEventListener("touchmove", handleMove, false);
     //  canvas.addEventListener("touchend",)
 
   }
@@ -229,7 +233,7 @@ namespace Freemind {
       }
     }
   }
-  function onpointermove(_event: MouseEvent): void {
+  function onPointerMove(_event: MouseEvent): void {
     hasMouseBeenMoved = true;
     console.log(_event.buttons);
     console.log(_event.type);
@@ -239,19 +243,22 @@ namespace Freemind {
       redrawWithoutChildren();
     }
   }
-  function pointerMove(_event: PointerEvent): void {
+  function handleStart(_event: TouchEvent) {
+    _event.preventDefault();
+    console.log("touchstart.");
+    let cordsBeginX: number = _event.targetTouches[0].pageX;
+    let cordsBeginY: number = _event.targetTouches[0].pageY;
+    console.log(` ${cordsBeginX}, ${cordsBeginY}`);
 
-    switch (_event.type) {
-      case "touchmove":
-      console.log("tried to move");
-        rootNodeY += _event.movementY;
-        rootNodeX += _event.movementX;
-        redrawWithoutChildren();
-        break;
-      default:
-        console.log(_event.type);
-    }
   }
+  function handleMove(_event: TouchEvent) {
+
+  }
+  function handleEnd(_event: TouchEvent) {
+    _event.preventDefault();
+
+  }
+  function handleCancel(_event: TouchEvent) { }
   function clearMap(): void {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
   }

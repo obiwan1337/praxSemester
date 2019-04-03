@@ -77,7 +77,7 @@ var Freemind;
         canvas.addEventListener("mousedown", onMouseDown);
         canvas.addEventListener("mouseup", onMouseUp);
         canvas.addEventListener("keyboardinput", keyboardInput);
-        //canvas.addEventListener("touchmove", pointerInputType);
+        canvas.addEventListener("touchmove", pointerMove);
         //  canvas.addEventListener("touchend",)
     }
     function resizecanvas() {
@@ -199,7 +199,8 @@ var Freemind;
         switch (_event.type) {
             case "touchmove":
                 console.log("tried to move");
-                Freemind.rootNodeY += _event.movementY;
+                console.log(_event.screenX + "pageX");
+                Freemind.rootNodeY += _event.screenX;
                 Freemind.rootNodeX += _event.movementX;
                 redrawWithoutChildren();
                 break;
