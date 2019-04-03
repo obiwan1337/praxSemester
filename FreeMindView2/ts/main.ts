@@ -246,9 +246,9 @@ namespace Freemind {
   function handleStart(_event: TouchEvent) {
     _event.preventDefault();
     console.log("touchstart.");
-    let cordsBeginX: number = _event.targetTouches[0].pageX;
-    let cordsBeginY: number = _event.targetTouches[0].pageY;
-    console.log(` ${cordsBeginX}, ${cordsBeginY}`);
+    let cordsBeginX: number = _event.targetTouches.length;
+    //let cordsBeginY: number = _event.targetTouches;
+    console.log(` ${cordsBeginX}, /* ${cordsBeginY} */`);
 
   }
   function handleMove(_event: TouchEvent) {
