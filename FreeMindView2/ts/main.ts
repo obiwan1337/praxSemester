@@ -246,10 +246,13 @@ namespace Freemind {
   function handleStart(_event: TouchEvent) {
     _event.preventDefault();
     console.log("touchstart.");
-    let cordsBeginX: number = _event.targetTouches.length;
-    //let cordsBeginY: number = _event.targetTouches;
-    console.log(` ${cordsBeginX}` /* ${cordsBeginY} `*/);
+    for (let i: number; i < _event.targetTouches.length; i++) {
 
+
+      console.log(_event.targetTouches[i].screenX);
+      console.log(_event.targetTouches[i].clientX);
+
+    }
   }
   function handleMove(_event: TouchEvent) {
 
