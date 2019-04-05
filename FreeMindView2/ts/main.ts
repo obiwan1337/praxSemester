@@ -279,7 +279,7 @@ namespace Freemind {
   function clearMap(): void {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
   }
-  function ongoingTouchIndexById(idToFind) {
+  function ongoingTouchIndexById(idToFind:any) {
     for (var i = 0; i < ongoingTouches.length; i++) {
       var id = ongoingTouches[i].identifier;
 
