@@ -202,7 +202,8 @@ var Freemind;
         _event.preventDefault();
         console.log(" touchstart.");
         let theTouchlist = _event.touches;
-        console.log(theTouchlist[0] + " touchlist");
+        console.log(theTouchlist[0].clientX + " touchlist");
+        console.log(theTouchlist[0].clientY + " touchlist");
     }
     function handleMove(_event) {
     }
