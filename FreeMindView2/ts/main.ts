@@ -255,13 +255,12 @@ namespace Freemind {
   }
   function handleMove(_event: TouchEvent) {
     let touches = _event.changedTouches;
-    for (var i = 0; i < touches.length; i++) {
+    for (let i = 0; i < touches.length; i++) {
       let idx = ongoingTouchIndexById(touches[i].identifier);
-      
+      console.log(idx);
       let currentRootPositionX: number = rootNodeX;
       let currentRootpositionY: number = rootNodeY;
         
-      
       if (idx == 0) {
         console.log("idx =0");
         rootNodeX += ongoingTouches[idx].pageX;
@@ -280,8 +279,8 @@ namespace Freemind {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
   }
   function ongoingTouchIndexById(idToFind:any) {
-    for (var i = 0; i < ongoingTouches.length; i++) {
-      var id = ongoingTouches[i].identifier;
+    for (let i = 0; i < ongoingTouches.length; i++) {
+      let id = ongoingTouches[i].identifier;
 
       if (id == idToFind) {
         return i;

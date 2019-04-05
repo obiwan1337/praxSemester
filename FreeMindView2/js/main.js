@@ -210,8 +210,9 @@ var Freemind;
     }
     function handleMove(_event) {
         let touches = _event.changedTouches;
-        for (var i = 0; i < touches.length; i++) {
+        for (let i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
+            console.log(idx);
             let currentRootPositionX = Freemind.rootNodeX;
             let currentRootpositionY = Freemind.rootNodeY;
             if (idx == 0) {
@@ -229,8 +230,8 @@ var Freemind;
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
     }
     function ongoingTouchIndexById(idToFind) {
-        for (var i = 0; i < ongoingTouches.length; i++) {
-            var id = ongoingTouches[i].identifier;
+        for (let i = 0; i < ongoingTouches.length; i++) {
+            let id = ongoingTouches[i].identifier;
             if (id == idToFind) {
                 return i;
             }
