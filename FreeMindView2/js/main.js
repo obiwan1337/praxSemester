@@ -215,7 +215,6 @@ var Freemind;
             let currentRootPositionX = Freemind.rootNodeX;
             let currentRootpositionY = Freemind.rootNodeY;
             if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
-                Freemind.rootNodeX - currentRootPositionX;
             }
             if (idx == 0) {
                 console.log("idx =0");
