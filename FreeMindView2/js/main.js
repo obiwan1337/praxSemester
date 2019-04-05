@@ -198,14 +198,31 @@ var Freemind;
             redrawWithoutChildren();
         }
     }
+    let ongoingTouches = [];
     function handleStart(_event) {
         _event.preventDefault();
         console.log(" touchstart.");
         let theTouchlist = _event.touches;
-        console.log(theTouchlist[0].clientX + " touchlist");
-        console.log(theTouchlist[0].clientY + " touchlist");
+        for (let i = 0; i < theTouchlist.length; i++) {
+            console.log(theTouchlist[i].clientX + " touchlistx");
+            console.log(theTouchlist[i].clientY + " touchlisty");
+        }
     }
     function handleMove(_event) {
+        let touches = _event.changedTouches;
+        for (var i = 0; i < touches.length; i++) {
+            let idx = ongoingTouchIndexById(touches[i].identifier);
+            let currentRootPositionX = Freemind.rootNodeX;
+            let currentRootpositionY = Freemind.rootNodeY;
+            if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
+                Freemind.rootNodeX - currentRootPositionX;
+            }
+            if (idx == 0) {
+                console.log("idx =0");
+                Freemind.rootNodeX += ongoingTouches[idx].pageX;
+                Freemind.rootNodeY += ongoingTouches[idx].pageY;
+            }
+        }
     }
     function handleEnd(_event) {
         _event.preventDefault();
@@ -213,6 +230,15 @@ var Freemind;
     function handleCancel(_event) { }
     function clearMap() {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
+    }
+    function ongoingTouchIndexById(idToFind) {
+        for (var i = 0; i < ongoingTouches.length; i++) {
+            var id = ongoingTouches[i].identifier;
+            if (id == idToFind) {
+                return i;
+            }
+        }
+        return -1; // not found
     }
     // parses URL parameters to object
     function getUrlSearchJson() {

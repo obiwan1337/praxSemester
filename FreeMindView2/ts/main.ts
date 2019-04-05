@@ -243,14 +243,32 @@ namespace Freemind {
       redrawWithoutChildren();
     }
   }
+  let ongoingTouches: any[] = [];
   function handleStart(_event: TouchEvent) {
     _event.preventDefault();
     console.log(" touchstart.");
     let theTouchlist: TouchList = _event.touches;
-    console.log(theTouchlist[0].clientX + " touchlist");
-    console.log(theTouchlist[0].clientY + " touchlist");
+    for (let i = 0; i < theTouchlist.length; i++) {
+      console.log(theTouchlist[i].clientX + " touchlistx");
+      console.log(theTouchlist[i].clientY + " touchlisty");
+    }
   }
   function handleMove(_event: TouchEvent) {
+    let touches = _event.changedTouches;
+    for (var i = 0; i < touches.length; i++) {
+      let idx = ongoingTouchIndexById(touches[i].identifier);
+      let currentRootPositionX: number = rootNodeX;
+      let currentRootpositionY: number = rootNodeY;
+      if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
+        
+      }
+      if (idx == 0) {
+        console.log("idx =0");
+        rootNodeX += ongoingTouches[idx].pageX;
+        rootNodeY += ongoingTouches[idx].pageY;
+
+      }
+    }
 
   }
   function handleEnd(_event: TouchEvent) {
@@ -261,7 +279,16 @@ namespace Freemind {
   function clearMap(): void {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
   }
+  function ongoingTouchIndexById(idToFind) {
+    for (var i = 0; i < ongoingTouches.length; i++) {
+      var id = ongoingTouches[i].identifier;
 
+      if (id == idToFind) {
+        return i;
+      }
+    }
+    return -1;    // not found
+  }
   // parses URL parameters to object
   function getUrlSearchJson(): URLObject {
     try {
