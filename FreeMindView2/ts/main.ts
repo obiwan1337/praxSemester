@@ -259,9 +259,9 @@ namespace Freemind {
       let idx = ongoingTouchIndexById(touches[i].identifier);
       let currentRootPositionX: number = rootNodeX;
       let currentRootpositionY: number = rootNodeY;
-      if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
+      /* if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
         
-      }
+      } */
       if (idx == 0) {
         console.log("idx =0");
         rootNodeX += ongoingTouches[idx].pageX;

@@ -214,8 +214,9 @@ var Freemind;
             let idx = ongoingTouchIndexById(touches[i].identifier);
             let currentRootPositionX = Freemind.rootNodeX;
             let currentRootpositionY = Freemind.rootNodeY;
-            if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
-            }
+            /* if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
+              
+            } */
             if (idx == 0) {
                 console.log("idx =0");
                 Freemind.rootNodeX += ongoingTouches[idx].pageX;
