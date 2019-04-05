@@ -245,14 +245,10 @@ namespace Freemind {
   }
   function handleStart(_event: TouchEvent) {
     _event.preventDefault();
-    console.log("touchstart.");
-    for (let i: number; i < _event.targetTouches.length; i++) {
-
-
-      console.log(_event.targetTouches[i].screenX + " screenx ");
-      console.log(_event.targetTouches[i].clientX + " clientx");
-
-    }
+    console.log(" touchstart.");
+    let theTouchlist: TouchList = _event.touches;
+    console.log(theTouchlist[0] + " touchlist");
+    
   }
   function handleMove(_event: TouchEvent) {
 

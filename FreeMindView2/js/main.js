@@ -50,7 +50,7 @@ var Freemind;
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield fetch('./mm/test.mm');
             const xmlText = yield response.text();
-            mindmapData = StringToXML(xmlText); // Save xml in variable
+            mindmapData = StringToXML(xmlText); // Save xml in letiable
         });
     }
     // parses a string to XML
@@ -73,11 +73,14 @@ var Freemind;
         Freemind.rootNodeY = ctx.canvas.height / 2;
         // Eventlistener for draggable canvas
         //canvas.addEventListener("mousedown", handleMouseDown);
-        canvas.addEventListener("mousemove", onpointermove);
+        canvas.addEventListener("mousemove", onPointerMove);
         canvas.addEventListener("mousedown", onMouseDown);
         canvas.addEventListener("mouseup", onMouseUp);
         canvas.addEventListener("keyboardinput", keyboardInput);
-        canvas.addEventListener("touchmove", pointerMove);
+        canvas.addEventListener("touchstart", handleStart, false);
+        canvas.addEventListener("touchend", handleEnd, false);
+        canvas.addEventListener("touchcancel", handleCancel, false);
+        canvas.addEventListener("touchmove", handleMove, false);
         //  canvas.addEventListener("touchend",)
     }
     function resizecanvas() {
@@ -185,7 +188,7 @@ var Freemind;
             }
         }
     }
-    function onpointermove(_event) {
+    function onPointerMove(_event) {
         hasMouseBeenMoved = true;
         console.log(_event.buttons);
         console.log(_event.type);
@@ -195,19 +198,18 @@ var Freemind;
             redrawWithoutChildren();
         }
     }
-    function pointerMove(_event) {
-        switch (_event.type) {
-            case "touchmove":
-                console.log("tried to move");
-                console.log(_event.screenX + "pageX");
-                Freemind.rootNodeY += _event.screenX;
-                Freemind.rootNodeX += _event.movementX;
-                redrawWithoutChildren();
-                break;
-            default:
-                console.log(_event.type);
-        }
+    function handleStart(_event) {
+        _event.preventDefault();
+        console.log(" touchstart.");
+        let theTouchlist = _event.touches;
+        console.log(theTouchlist[0] + " touchlist");
     }
+    function handleMove(_event) {
+    }
+    function handleEnd(_event) {
+        _event.preventDefault();
+    }
+    function handleCancel(_event) { }
     function clearMap() {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
     }
