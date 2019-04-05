@@ -257,9 +257,9 @@ namespace Freemind {
     let touches = _event.changedTouches;
     for (var i = 0; i < touches.length; i++) {
       let idx = ongoingTouchIndexById(touches[i].identifier);
+        /* if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
       let currentRootPositionX: number = rootNodeX;
       let currentRootpositionY: number = rootNodeY;
-      /* if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
         
       } */
       if (idx == 0) {

@@ -212,11 +212,11 @@ var Freemind;
         let touches = _event.changedTouches;
         for (var i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
-            let currentRootPositionX = Freemind.rootNodeX;
-            let currentRootpositionY = Freemind.rootNodeY;
             /* if (currentRootPositionX < ongoingTouches[idx].pageX && currentRootpositionY > ongoingTouches[idx].pageY) {
-              
-            } */
+          let currentRootPositionX: number = rootNodeX;
+          let currentRootpositionY: number = rootNodeY;
+            
+          } */
             if (idx == 0) {
                 console.log("idx =0");
                 Freemind.rootNodeX += ongoingTouches[idx].pageX;
