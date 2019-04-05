@@ -202,8 +202,8 @@ var Freemind;
         _event.preventDefault();
         console.log("touchstart.");
         for (let i; i < _event.targetTouches.length; i++) {
-            console.log(_event.targetTouches[i].screenX);
-            console.log(_event.targetTouches[i].clientX);
+            console.log(_event.targetTouches[i].screenX + " screenx ");
+            console.log(_event.targetTouches[i].clientX + " clientx");
         }
     }
     function handleMove(_event) {
