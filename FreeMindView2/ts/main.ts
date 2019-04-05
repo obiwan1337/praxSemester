@@ -249,8 +249,8 @@ namespace Freemind {
     for (let i: number; i < _event.targetTouches.length; i++) {
 
 
-      console.log(_event.targetTouches[i].screenX);
-      console.log(_event.targetTouches[i].clientX);
+      console.log(_event.targetTouches[i].screenX + " screenx ");
+      console.log(_event.targetTouches[i].clientX + " clientx");
 
     }
   }
