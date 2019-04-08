@@ -264,11 +264,16 @@ namespace Freemind {
     for (let i = 0; i < touches.length; i++) {
       let idx = ongoingTouchIndexById(touches[i].identifier);
       console.log(idx + " idx");
-      /* let currentRootPositionX: number = rootNodeX;
-      let currentRootpositionY: number = rootNodeY; */
+      let differenceOfX: number;
+      let differenceOfY: number;
+      if (touches[i].pageX < rootNodeX && touches[i].pageY < rootNodeY) {
+        differenceOfX = touches[i].pageX - rootNodeX;
+        differenceOfY = touches[i].pageY - rootNodeY;
+        console.log(differenceOfX, differenceOfY);
+      }
 
-      if (idx >= 0) {
-        console.log("idx = 0");
+      if (idx >= 0 && idx <= 1) {
+        console.log(idx + " = 0");
         rootNodeX += ongoingTouches[idx].pageX;
         rootNodeY += ongoingTouches[idx].pageY;
 
@@ -280,6 +285,7 @@ namespace Freemind {
     }
 
   }
+
   function handleEnd(_event: TouchEvent) {
     _event.preventDefault();
     let touches = _event.changedTouches;
@@ -288,6 +294,7 @@ namespace Freemind {
       var idx = ongoingTouchIndexById(touches[i].identifier);
 
       if (idx >= 0) {
+        console.log(" end of touch");
         ongoingTouches.splice(idx, 1);  // remove it; we're done
       } else {
         console.log("can't figure out which touch to end");
@@ -305,7 +312,7 @@ namespace Freemind {
       ongoingTouches.splice(idx, 1);  // remove it; we're done
     }
   }
-  function copyTouch(touch:Touch) {
+  function copyTouch(touch: Touch) {
     return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
   }
   function clearMap(): void {

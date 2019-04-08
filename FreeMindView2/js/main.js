@@ -217,10 +217,15 @@ var Freemind;
         for (let i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
             console.log(idx + " idx");
-            /* let currentRootPositionX: number = rootNodeX;
-            let currentRootpositionY: number = rootNodeY; */
-            if (idx >= 0) {
-                console.log("idx = 0");
+            let differenceOfX;
+            let differenceOfY;
+            if (touches[i].pageX < Freemind.rootNodeX && touches[i].pageY < Freemind.rootNodeY) {
+                differenceOfX = touches[i].pageX - Freemind.rootNodeX;
+                differenceOfY = touches[i].pageY - Freemind.rootNodeY;
+                console.log(differenceOfX, differenceOfY);
+            }
+            if (idx >= 0 && idx <= 1) {
+                console.log(idx + " = 0");
                 Freemind.rootNodeX += ongoingTouches[idx].pageX;
                 Freemind.rootNodeY += ongoingTouches[idx].pageY;
                 ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
@@ -237,6 +242,7 @@ var Freemind;
         for (var i = 0; i < touches.length; i++) {
             var idx = ongoingTouchIndexById(touches[i].identifier);
             if (idx >= 0) {
+                console.log(" end of touch");
                 ongoingTouches.splice(idx, 1); // remove it; we're done
             }
             else {
