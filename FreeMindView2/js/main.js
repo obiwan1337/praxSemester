@@ -201,7 +201,7 @@ var Freemind;
     let ongoingTouches = [];
     function handleStart(_event) {
         _event.preventDefault();
-        console.log(" touchstart.");
+        console.log(" touchstart");
         let theTouchlist = _event.touches;
         for (let i = 0; i < theTouchlist.length; i++) {
             console.log(theTouchlist[i].clientX + " touchlistx");
@@ -210,6 +210,7 @@ var Freemind;
     }
     function handleMove(_event) {
         let touches = _event.changedTouches;
+        console.log(touches.length);
         for (let i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
             console.log(idx);

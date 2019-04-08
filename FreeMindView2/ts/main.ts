@@ -246,7 +246,7 @@ namespace Freemind {
   let ongoingTouches: any[] = [];
   function handleStart(_event: TouchEvent) {
     _event.preventDefault();
-    console.log(" touchstart.");
+    console.log(" touchstart");
     let theTouchlist: TouchList = _event.touches;
     for (let i = 0; i < theTouchlist.length; i++) {
       console.log(theTouchlist[i].clientX + " touchlistx");
@@ -255,11 +255,12 @@ namespace Freemind {
   }
   function handleMove(_event: TouchEvent) {
     let touches = _event.changedTouches;
+    console.log(touches.length);
     for (let i = 0; i < touches.length; i++) {
       let idx = ongoingTouchIndexById(touches[i].identifier);
-      console.log(idx);
-      let currentRootPositionX: number = rootNodeX;
-      let currentRootpositionY: number = rootNodeY;
+      console.log(idx + " idx");
+      /* let currentRootPositionX: number = rootNodeX;
+      let currentRootpositionY: number = rootNodeY; */
 
       if (idx == 0) {
         console.log("idx = 0");
@@ -290,7 +291,7 @@ namespace Freemind {
   function ongoingTouchIndexById(idToFind: any) {
     for (let i = 0; i < ongoingTouches.length; i++) {
       let id = ongoingTouches[i].identifier;
-      console.log(id + " id")
+      console.log(id + " id");
       if (id == idToFind) {
         return i;
       }
