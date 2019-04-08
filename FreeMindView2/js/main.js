@@ -216,7 +216,7 @@ var Freemind;
             let currentRootPositionX = Freemind.rootNodeX;
             let currentRootpositionY = Freemind.rootNodeY;
             if (idx == 0) {
-                console.log("idx =0");
+                console.log("idx = 0");
                 Freemind.rootNodeX += ongoingTouches[idx].pageX;
                 Freemind.rootNodeY += ongoingTouches[idx].pageY;
             }
@@ -225,7 +225,15 @@ var Freemind;
     function handleEnd(_event) {
         _event.preventDefault();
     }
-    function handleCancel(_event) { }
+    function handleCancel(_event) {
+        _event.preventDefault();
+        console.log("touchcancel.");
+        var touches = _event.changedTouches;
+        for (var i = 0; i < touches.length; i++) {
+            var idx = ongoingTouchIndexById(touches[i].identifier);
+            ongoingTouches.splice(idx, 1); // remove it; we're done
+        }
+    }
     function clearMap() {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
     }

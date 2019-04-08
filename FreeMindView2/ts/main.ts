@@ -260,9 +260,9 @@ namespace Freemind {
       console.log(idx);
       let currentRootPositionX: number = rootNodeX;
       let currentRootpositionY: number = rootNodeY;
-        
+
       if (idx == 0) {
-        console.log("idx =0");
+        console.log("idx = 0");
         rootNodeX += ongoingTouches[idx].pageX;
         rootNodeY += ongoingTouches[idx].pageY;
 
@@ -274,11 +274,20 @@ namespace Freemind {
     _event.preventDefault();
 
   }
-  function handleCancel(_event: TouchEvent) { }
+  function handleCancel(_event: TouchEvent) {
+    _event.preventDefault();
+    console.log("touchcancel.");
+    var touches = _event.changedTouches;
+
+    for (var i = 0; i < touches.length; i++) {
+      var idx = ongoingTouchIndexById(touches[i].identifier);
+      ongoingTouches.splice(idx, 1);  // remove it; we're done
+    }
+  }
   function clearMap(): void {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
   }
-  function ongoingTouchIndexById(idToFind:any) {
+  function ongoingTouchIndexById(idToFind: any) {
     for (let i = 0; i < ongoingTouches.length; i++) {
       let id = ongoingTouches[i].identifier;
 
