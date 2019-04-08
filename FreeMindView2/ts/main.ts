@@ -244,13 +244,18 @@ namespace Freemind {
     }
   }
   let ongoingTouches: any[] = [];
+
   function handleStart(_event: TouchEvent) {
     _event.preventDefault();
     console.log(" touchstart");
     let theTouchlist: TouchList = _event.touches;
+
     for (let i = 0; i < theTouchlist.length; i++) {
+      console.log("touchstart:" + i + "...");
+      ongoingTouches.push(copyTouch(theTouchlist[i]));
       console.log(theTouchlist[i].clientX + " touchlistx");
       console.log(theTouchlist[i].clientY + " touchlisty");
+      console.log("touchstart:" + i + ".");
     }
   }
   function handleMove(_event: TouchEvent) {
@@ -262,28 +267,46 @@ namespace Freemind {
       /* let currentRootPositionX: number = rootNodeX;
       let currentRootpositionY: number = rootNodeY; */
 
-      if (idx == 0) {
+      if (idx >= 0) {
         console.log("idx = 0");
         rootNodeX += ongoingTouches[idx].pageX;
         rootNodeY += ongoingTouches[idx].pageY;
 
+        ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
+        console.log(".");
+      } else {
+        console.log("can't figure out which touch to continue");
       }
     }
 
   }
   function handleEnd(_event: TouchEvent) {
     _event.preventDefault();
+    let touches = _event.changedTouches;
+    for (var i = 0; i < touches.length; i++) {
 
+      var idx = ongoingTouchIndexById(touches[i].identifier);
+
+      if (idx >= 0) {
+        ongoingTouches.splice(idx, 1);  // remove it; we're done
+      } else {
+        console.log("can't figure out which touch to end");
+      }
+
+    }
   }
   function handleCancel(_event: TouchEvent) {
     _event.preventDefault();
     console.log("touchcancel.");
-    var touches = _event.changedTouches;
+    let touches: TouchList = _event.changedTouches;
 
     for (var i = 0; i < touches.length; i++) {
       var idx = ongoingTouchIndexById(touches[i].identifier);
       ongoingTouches.splice(idx, 1);  // remove it; we're done
     }
+  }
+  function copyTouch(touch:Touch) {
+    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
   }
   function clearMap(): void {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas

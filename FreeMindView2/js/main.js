@@ -204,8 +204,11 @@ var Freemind;
         console.log(" touchstart");
         let theTouchlist = _event.touches;
         for (let i = 0; i < theTouchlist.length; i++) {
+            console.log("touchstart:" + i + "...");
+            ongoingTouches.push(copyTouch(theTouchlist[i]));
             console.log(theTouchlist[i].clientX + " touchlistx");
             console.log(theTouchlist[i].clientY + " touchlisty");
+            console.log("touchstart:" + i + ".");
         }
     }
     function handleMove(_event) {
@@ -216,24 +219,42 @@ var Freemind;
             console.log(idx + " idx");
             /* let currentRootPositionX: number = rootNodeX;
             let currentRootpositionY: number = rootNodeY; */
-            if (idx == 0) {
+            if (idx >= 0) {
                 console.log("idx = 0");
                 Freemind.rootNodeX += ongoingTouches[idx].pageX;
                 Freemind.rootNodeY += ongoingTouches[idx].pageY;
+                ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
+                console.log(".");
+            }
+            else {
+                console.log("can't figure out which touch to continue");
             }
         }
     }
     function handleEnd(_event) {
         _event.preventDefault();
+        let touches = _event.changedTouches;
+        for (var i = 0; i < touches.length; i++) {
+            var idx = ongoingTouchIndexById(touches[i].identifier);
+            if (idx >= 0) {
+                ongoingTouches.splice(idx, 1); // remove it; we're done
+            }
+            else {
+                console.log("can't figure out which touch to end");
+            }
+        }
     }
     function handleCancel(_event) {
         _event.preventDefault();
         console.log("touchcancel.");
-        var touches = _event.changedTouches;
+        let touches = _event.changedTouches;
         for (var i = 0; i < touches.length; i++) {
             var idx = ongoingTouchIndexById(touches[i].identifier);
             ongoingTouches.splice(idx, 1); // remove it; we're done
         }
+    }
+    function copyTouch(touch) {
+        return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
     }
     function clearMap() {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
