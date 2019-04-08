@@ -240,6 +240,7 @@ var Freemind;
     function ongoingTouchIndexById(idToFind) {
         for (let i = 0; i < ongoingTouches.length; i++) {
             let id = ongoingTouches[i].identifier;
+            console.log(id + " id");
             if (id == idToFind) {
                 return i;
             }
