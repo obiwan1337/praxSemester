@@ -213,9 +213,9 @@ var Freemind;
         console.log(touches.length);
         for (let i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
-            console.log(idx);
-            let currentRootPositionX = Freemind.rootNodeX;
-            let currentRootpositionY = Freemind.rootNodeY;
+            console.log(idx + " idx");
+            /* let currentRootPositionX: number = rootNodeX;
+            let currentRootpositionY: number = rootNodeY; */
             if (idx == 0) {
                 console.log("idx = 0");
                 Freemind.rootNodeX += ongoingTouches[idx].pageX;
