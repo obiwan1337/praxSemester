@@ -268,9 +268,12 @@ namespace Freemind {
       console.log(idx + " idx");
 
       xStrich = touches[i].clientX;
+      console.log (xStrich);
       yStrich = touches[i].clientY;
+      console.log (yStrich);
       let deltaX:number = xStrich - touches[i].clientX;
       let deltaY:number = yStrich - touches[i].clientY;
+      console.log(deltaX,deltaY);
       rootNodeX += deltaX;
       rootNodeY += deltaY;
 

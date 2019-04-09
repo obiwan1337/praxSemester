@@ -220,9 +220,12 @@ var Freemind;
             let idx = ongoingTouchIndexById(touches[i].identifier);
             console.log(idx + " idx");
             xStrich = touches[i].clientX;
+            console.log(xStrich);
             yStrich = touches[i].clientY;
+            console.log(yStrich);
             let deltaX = xStrich - touches[i].clientX;
             let deltaY = yStrich - touches[i].clientY;
+            console.log(deltaX, deltaY);
             Freemind.rootNodeX += deltaX;
             Freemind.rootNodeY += deltaY;
             if (idx >= 0) {
