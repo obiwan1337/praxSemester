@@ -199,7 +199,8 @@ var Freemind;
         }
     }
     let ongoingTouches = [];
-    let touchprogress = false;
+    let xStrich;
+    let yStrich;
     function handleStart(_event) {
         _event.preventDefault();
         console.log(" touchstart");
@@ -218,37 +219,13 @@ var Freemind;
         for (let i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
             console.log(idx + " idx");
-            let differenceOfX;
-            let differenceOfY;
-            if (touches[i].clientX < Freemind.rootNodeX && touches[i].clientY < Freemind.rootNodeY && touchprogress == false) { // X und Y kleiner als rootNode
-                differenceOfX = touches[i].clientX - Freemind.rootNodeX;
-                differenceOfY = touches[i].clientY - Freemind.rootNodeY;
-                touchprogress = true;
-                console.log(differenceOfX + " difx" + differenceOfY);
-            }
-            if (touches[i].clientX > Freemind.rootNodeX && touches[i].clientY > Freemind.rootNodeY && touchprogress == false) { // X und Y groesser als rootNode
-                differenceOfX = touches[i].clientX - Freemind.rootNodeX;
-                differenceOfY = touches[i].clientY - Freemind.rootNodeY;
-                touchprogress = true;
-                console.log(differenceOfX + " difx" + differenceOfY);
-            }
-            if (touches[i].clientX > Freemind.rootNodeX && touches[i].clientY < Freemind.rootNodeY && touchprogress == false) { // x groesser und Y kleiner als rootNode
-                differenceOfX = touches[i].clientX - Freemind.rootNodeX;
-                differenceOfY = touches[i].clientY - Freemind.rootNodeY;
-                touchprogress = true;
-                console.log(differenceOfX + " difx" + differenceOfY);
-            }
-            if (touches[i].clientX < Freemind.rootNodeX && touches[i].clientY > Freemind.rootNodeY && touchprogress == false) { // Y groesser und X kleiner als rootNode
-                differenceOfX = touches[i].clientX - Freemind.rootNodeX;
-                differenceOfY = touches[i].clientY - Freemind.rootNodeY;
-                touchprogress = true;
-                console.log(differenceOfX + " difx" + differenceOfY);
-            }
-            console.log(differenceOfX + " difx outside of anything" + differenceOfY);
-            Freemind.rootNodeX = differenceOfX + touches[i].clientX;
-            Freemind.rootNodeY = differenceOfY + touches[i].clientY;
+            xStrich = touches[i].clientX;
+            yStrich = touches[i].clientY;
+            let deltaX = xStrich - touches[i].clientX;
+            let deltaY = yStrich - touches[i].clientY;
+            Freemind.rootNodeX += deltaX;
+            Freemind.rootNodeY += deltaY;
             if (idx >= 0) {
-                console.log(idx + " >= 0 ");
                 ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
                 console.log(".");
             }
@@ -264,11 +241,7 @@ var Freemind;
             var idx = ongoingTouchIndexById(theTouchlist[i].identifier);
             if (idx >= 0) {
                 console.log(" end of touch");
-                console.log(theTouchlist[i].clientX + " touchlistx");
-                console.log(theTouchlist[i].clientY + " touchlisty");
-                console.log();
                 ongoingTouches.splice(idx, 1); // remove it; we're done
-                touchprogress = false;
             }
             else {
                 console.log("can't figure out which touch to end");
@@ -282,7 +255,6 @@ var Freemind;
         for (var i = 0; i < touches.length; i++) {
             var idx = ongoingTouchIndexById(touches[i].identifier);
             ongoingTouches.splice(idx, 1); // remove it; we're done
-            touchprogress = false;
         }
     }
     function copyTouch(touch) {
