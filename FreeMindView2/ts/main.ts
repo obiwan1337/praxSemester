@@ -267,31 +267,31 @@ namespace Freemind {
       console.log(idx + " idx");
       let differenceOfX: number;
       let differenceOfY: number;
-      if (touches[i].pageX < rootNodeX && touches[i].pageY < rootNodeY && touchprogress == false) {// X und Y kleiner als rootNode
-        differenceOfX = touches[i].pageX - rootNodeX;
-        differenceOfY = touches[i].pageY - rootNodeY;
+      if (touches[i].clientX < rootNodeX && touches[i].clientY < rootNodeY && touchprogress == false) {// X und Y kleiner als rootNode
+        differenceOfX = touches[i].clientX - rootNodeX;
+        differenceOfY = touches[i].clientY - rootNodeY;
         touchprogress = true;
         console.log(differenceOfX + " difx" + differenceOfY);
-      } if (touches[i].pageX > rootNodeX && touches[i].pageY > rootNodeY && touchprogress == false) {// X und Y groesser als rootNode
-        differenceOfX = touches[i].pageX - rootNodeX;
-        differenceOfY = touches[i].pageY - rootNodeY;
+      } if (touches[i].clientX > rootNodeX && touches[i].clientY > rootNodeY && touchprogress == false) {// X und Y groesser als rootNode
+        differenceOfX = touches[i].clientX - rootNodeX;
+        differenceOfY = touches[i].clientY - rootNodeY;
         touchprogress = true;
         console.log(differenceOfX + " difx" + differenceOfY);
-      } if (touches[i].pageX > rootNodeX && touches[i].pageY < rootNodeY && touchprogress == false) {// x groesser und Y kleiner als rootNode
-        differenceOfX = touches[i].pageX - rootNodeX;
-        differenceOfY = touches[i].pageY - rootNodeY;
+      } if (touches[i].clientX > rootNodeX && touches[i].clientY < rootNodeY && touchprogress == false) {// x groesser und Y kleiner als rootNode
+        differenceOfX = touches[i].clientX - rootNodeX;
+        differenceOfY = touches[i].clientY - rootNodeY;
         touchprogress = true;
         console.log(differenceOfX + " difx" + differenceOfY);
       }
-      if (touches[i].pageX < rootNodeX && touches[i].pageY > rootNodeY && touchprogress == false) {// Y groesser und X kleiner als rootNode
-        differenceOfX = touches[i].pageX - rootNodeX;
-        differenceOfY = touches[i].pageY - rootNodeY;
+      if (touches[i].clientX < rootNodeX && touches[i].clientY > rootNodeY && touchprogress == false) {// Y groesser und X kleiner als rootNode
+        differenceOfX = touches[i].clientX - rootNodeX;
+        differenceOfY = touches[i].clientY - rootNodeY;
         touchprogress = true;
         console.log(differenceOfX + " difx" + differenceOfY);
       }
       console.log(differenceOfX + " difx outside of anything" + differenceOfY);
-      rootNodeX = differenceOfX + touches[i].pageX;
-      rootNodeY = differenceOfY + touches[i].pageY;
+      rootNodeX = differenceOfX + touches[i].clientX;
+      rootNodeY = differenceOfY + touches[i].clientY;
       
       if (idx >= 0) {
         console.log(idx + " >= 0 ");
@@ -314,6 +314,7 @@ namespace Freemind {
 
       if (idx >= 0) {
         console.log(" end of touch");
+        console.log()
         ongoingTouches.splice(idx, 1);  // remove it; we're done
         touchprogress = false;
       } else {
