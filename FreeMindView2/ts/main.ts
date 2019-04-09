@@ -274,10 +274,10 @@ namespace Freemind {
       let yStrich: number = touches[i].clientY;
       deltaX = xStrich - cordX;
       deltaY = yStrich - cordY;
-      console.log(deltaX, deltaY);
       rootNodeX += deltaX;
       rootNodeY += deltaY;
-
+      
+      console.log(deltaX, deltaY,cordX,cordY,xStrich,yStrich);
       cordX = xStrich;
       cordX = yStrich;
       redrawWithoutChildren();
