@@ -247,8 +247,8 @@ var Freemind;
             console.log(differenceOfX + " difx outside of anything" + differenceOfY);
             Freemind.rootNodeX = differenceOfX + touches[i].pageX;
             Freemind.rootNodeY = differenceOfY + touches[i].pageY;
-            if (idx >= 0 && idx <= 1) {
-                console.log(idx + " >= 0 oder <=1");
+            if (idx >= 0) {
+                console.log(idx + " >= 0 ");
                 ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
                 console.log(".");
             }
