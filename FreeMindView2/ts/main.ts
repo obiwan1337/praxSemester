@@ -244,6 +244,7 @@ namespace Freemind {
     }
   }
   let ongoingTouches: any[] = [];
+  let touchprogress: boolean = false;
 
   function handleStart(_event: TouchEvent) {
     _event.preventDefault();
@@ -266,16 +267,33 @@ namespace Freemind {
       console.log(idx + " idx");
       let differenceOfX: number;
       let differenceOfY: number;
-      if (touches[i].pageX < rootNodeX && touches[i].pageY < rootNodeY) {
+      if (touches[i].pageX < rootNodeX && touches[i].pageY < rootNodeY && touchprogress == false) {// X und Y kleiner als rootNode
         differenceOfX = touches[i].pageX - rootNodeX;
         differenceOfY = touches[i].pageY - rootNodeY;
-        console.log(differenceOfX, differenceOfY);
+        touchprogress = true;
+        console.log(differenceOfX + " difx" + differenceOfY);
+      } if (touches[i].pageX > rootNodeX && touches[i].pageY > rootNodeY && touchprogress == false) {// X und Y groesser als rootNode
+        differenceOfX = touches[i].pageX - rootNodeX;
+        differenceOfY = touches[i].pageY - rootNodeY;
+        touchprogress = true;
+        console.log(differenceOfX + " difx" + differenceOfY);
+      } if (touches[i].pageX > rootNodeX && touches[i].pageY < rootNodeY && touchprogress == false) {// x groesser und Y kleiner als rootNode
+        differenceOfX = touches[i].pageX - rootNodeX;
+        differenceOfY = touches[i].pageY - rootNodeY;
+        touchprogress = true;
+        console.log(differenceOfX + " difx" + differenceOfY);
       }
-
+      if (touches[i].pageX < rootNodeX && touches[i].pageY > rootNodeY && touchprogress == false) {// Y groesser und X kleiner als rootNode
+        differenceOfX = touches[i].pageX - rootNodeX;
+        differenceOfY = touches[i].pageY - rootNodeY;
+        touchprogress = true;
+        console.log(differenceOfX + " difx" + differenceOfY);
+      }
+      rootNodeX = differenceOfX + touches[i].pageX;
+      rootNodeY = differenceOfY + touches[i].pageY;
+      
       if (idx >= 0 && idx <= 1) {
-        console.log(idx + " = 0");
-        rootNodeX += ongoingTouches[idx].pageX;
-        rootNodeY += ongoingTouches[idx].pageY;
+        console.log(idx + " >= 0 oder <=1");
 
         ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
         console.log(".");
@@ -296,6 +314,7 @@ namespace Freemind {
       if (idx >= 0) {
         console.log(" end of touch");
         ongoingTouches.splice(idx, 1);  // remove it; we're done
+        touchprogress = false;
       } else {
         console.log("can't figure out which touch to end");
       }
@@ -310,6 +329,7 @@ namespace Freemind {
     for (var i = 0; i < touches.length; i++) {
       var idx = ongoingTouchIndexById(touches[i].identifier);
       ongoingTouches.splice(idx, 1);  // remove it; we're done
+      touchprogress = false;
     }
   }
   function copyTouch(touch: Touch) {
