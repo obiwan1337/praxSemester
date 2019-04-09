@@ -279,7 +279,7 @@ namespace Freemind {
       
       console.log(deltaX, deltaY,cordX,cordY,xStrich,yStrich);
       cordX = xStrich;
-      cordX = yStrich;
+      cordY = yStrich;
       redrawWithoutChildren();
       
       

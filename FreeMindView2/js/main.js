@@ -229,7 +229,7 @@ var Freemind;
             Freemind.rootNodeY += deltaY;
             console.log(deltaX, deltaY, cordX, cordY, xStrich, yStrich);
             cordX = xStrich;
-            cordX = yStrich;
+            cordY = yStrich;
             redrawWithoutChildren();
             if (idx >= 0) {
                 ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
