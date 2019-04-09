@@ -244,7 +244,7 @@ namespace Freemind {
     }
   }
   let ongoingTouches: any[] = [];
-  
+
 
   let cordX: number;
   let cordY: number;
@@ -274,13 +274,14 @@ namespace Freemind {
       let yStrich: number = touches[i].clientY;
       deltaX = xStrich - cordX;
       deltaY = yStrich - cordY;
-    
+      console.log(deltaX, deltaY);
       rootNodeX += deltaX;
       rootNodeY += deltaY;
 
       cordX = xStrich;
       cordX = yStrich;
-      console.log("did nothing !");
+      console.log("cords "+ xStrich,yStrich);
+      
       if (idx >= 0) {
         ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
         console.log(".");

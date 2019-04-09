@@ -226,11 +226,12 @@ var Freemind;
             let yStrich = touches[i].clientY;
             deltaX = xStrich - cordX;
             deltaY = yStrich - cordY;
+            console.log(deltaX, deltaY);
             Freemind.rootNodeX += deltaX;
             Freemind.rootNodeY += deltaY;
             cordX = xStrich;
             cordX = yStrich;
-            console.log("did nothing !");
+            console.log("cords " + xStrich, yStrich);
             if (idx >= 0) {
                 ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
                 console.log(".");
