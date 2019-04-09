@@ -269,6 +269,7 @@ namespace Freemind {
       console.log(idx + " idx");
       let deltaX: number;
       let deltaY: number;
+      console.log(" war hier");
       let xStrich: number = touches[i].clientX;
       let yStrich: number = touches[i].clientY;
       deltaX = xStrich - cordX;
@@ -279,6 +280,7 @@ namespace Freemind {
 
       cordX = xStrich;
       cordX = yStrich;
+      console.log("did nothing !");
       if (idx >= 0) {
         ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
         console.log(".");
