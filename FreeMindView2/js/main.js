@@ -244,6 +244,7 @@ var Freemind;
                 touchprogress = true;
                 console.log(differenceOfX + " difx" + differenceOfY);
             }
+            console.log(differenceOfX + " difx outside of anything" + differenceOfY);
             Freemind.rootNodeX = differenceOfX + touches[i].pageX;
             Freemind.rootNodeY = differenceOfY + touches[i].pageY;
             if (idx >= 0 && idx <= 1) {

@@ -289,6 +289,7 @@ namespace Freemind {
         touchprogress = true;
         console.log(differenceOfX + " difx" + differenceOfY);
       }
+      console.log(differenceOfX + " difx outside of anything" + differenceOfY);
       rootNodeX = differenceOfX + touches[i].pageX;
       rootNodeY = differenceOfY + touches[i].pageY;
       
