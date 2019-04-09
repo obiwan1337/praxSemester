@@ -199,8 +199,8 @@ var Freemind;
         }
     }
     let ongoingTouches = [];
-    let xStrich;
-    let yStrich;
+    let cordX;
+    let cordY;
     function handleStart(_event) {
         _event.preventDefault();
         console.log(" touchstart");
@@ -208,8 +208,8 @@ var Freemind;
         for (let i = 0; i < theTouchlist.length; i++) {
             console.log("touchstart:" + i + "...");
             ongoingTouches.push(copyTouch(theTouchlist[i]));
-            console.log(theTouchlist[i].clientX + " touchlistx");
-            console.log(theTouchlist[i].clientY + " touchlisty");
+            cordX = theTouchlist[i].clientX;
+            cordY = theTouchlist[i].clientY;
             console.log("touchstart:" + i + ".");
         }
     }
@@ -219,15 +219,16 @@ var Freemind;
         for (let i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
             console.log(idx + " idx");
-            xStrich = touches[i].clientX;
-            console.log(xStrich);
-            yStrich = touches[i].clientY;
-            console.log(yStrich);
-            let deltaX = xStrich - touches[i].clientX;
-            let deltaY = yStrich - touches[i].clientY;
-            console.log(deltaX, deltaY);
+            let deltaX;
+            let deltaY;
+            let xStrich = touches[i].clientX;
+            let yStrich = touches[i].clientY;
+            deltaX = xStrich - cordX;
+            deltaY = yStrich - cordY;
             Freemind.rootNodeX += deltaX;
             Freemind.rootNodeY += deltaY;
+            cordX = xStrich;
+            cordX = yStrich;
             if (idx >= 0) {
                 ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
                 console.log(".");
