@@ -259,11 +259,13 @@ var Freemind;
     }
     function handleEnd(_event) {
         _event.preventDefault();
-        let touches = _event.changedTouches;
-        for (var i = 0; i < touches.length; i++) {
-            var idx = ongoingTouchIndexById(touches[i].identifier);
+        let theTouchlist = _event.changedTouches;
+        for (var i = 0; i < theTouchlist.length; i++) {
+            var idx = ongoingTouchIndexById(theTouchlist[i].identifier);
             if (idx >= 0) {
                 console.log(" end of touch");
+                console.log(theTouchlist[i].clientX + " touchlistx");
+                console.log(theTouchlist[i].clientY + " touchlisty");
                 console.log();
                 ongoingTouches.splice(idx, 1); // remove it; we're done
                 touchprogress = false;
