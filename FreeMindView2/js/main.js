@@ -48,7 +48,7 @@ var Freemind;
     }
     function fetchXML() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch('./mm/test.mm');
+            const response = yield fetch('./mm/EIA2.mm');
             const xmlText = yield response.text();
             mindmapData = StringToXML(xmlText); // Save xml in letiable
         });

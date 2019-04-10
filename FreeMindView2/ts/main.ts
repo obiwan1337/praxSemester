@@ -58,7 +58,7 @@ namespace Freemind {
 
   }
   async function fetchXML(): Promise<void> {
-    const response: Response = await fetch('./mm/test.mm');
+    const response: Response = await fetch('./mm/EIA2.mm');
 
     const xmlText: string = await response.text();
     mindmapData = StringToXML(xmlText); // Save xml in letiable
