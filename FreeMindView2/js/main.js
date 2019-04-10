@@ -180,6 +180,7 @@ var Freemind;
         }
         else {
             for (let i = 0; i < fmvNodes.length; i++) {
+                console.log(fmvNodes[i].pfadrect, _event.clientX, _event.clientY);
                 if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
                     fmvNodes[i].folded = !fmvNodes[i].folded;
                     fmvNodes[0].calculateVisibleChildren();
