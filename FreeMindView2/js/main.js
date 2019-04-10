@@ -190,8 +190,6 @@ var Freemind;
     }
     function onPointerMove(_event) {
         hasMouseBeenMoved = true;
-        console.log(_event.buttons);
-        console.log(_event.type);
         if (_event.buttons == 1) {
             Freemind.rootNodeY += _event.movementY;
             Freemind.rootNodeX += _event.movementX;

@@ -235,8 +235,7 @@ namespace Freemind {
   }
   function onPointerMove(_event: MouseEvent): void {
     hasMouseBeenMoved = true;
-    console.log(_event.buttons);
-    console.log(_event.type);
+    
     if (_event.buttons == 1) {
       rootNodeY += _event.movementY;
       rootNodeX += _event.movementX;
