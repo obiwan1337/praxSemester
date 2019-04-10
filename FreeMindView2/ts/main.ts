@@ -225,7 +225,7 @@ namespace Freemind {
       }
     } else {
       for (let i: number = 0; i < fmvNodes.length; i++) {
-        console.log(fmvNodes[i].pfadrect,_event.clientX, _event.clientY);
+        console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
         if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
           fmvNodes[i].folded = !fmvNodes[i].folded;
           fmvNodes[0].calculateVisibleChildren();
@@ -236,7 +236,7 @@ namespace Freemind {
   }
   function onPointerMove(_event: MouseEvent): void {
     hasMouseBeenMoved = true;
-    
+
     if (_event.buttons == 1) {
       rootNodeY += _event.movementY;
       rootNodeX += _event.movementX;
@@ -269,23 +269,23 @@ namespace Freemind {
       console.log(idx + " idx");
       let deltaX: number;
       let deltaY: number;
-      
+
       let xStrich: number = touches[i].clientX;
       let yStrich: number = touches[i].clientY;
       deltaX = xStrich - cordX;
       deltaY = yStrich - cordY;
       rootNodeX += deltaX;
       rootNodeY += deltaY;
-      
-      console.log(deltaX, deltaY,cordX,cordY,xStrich,yStrich);
+
+      console.log(deltaX, deltaY, cordX, cordY, xStrich, yStrich);
       cordX = xStrich;
       cordY = yStrich;
       redrawWithoutChildren();
-      
-      
+
+
       if (idx >= 0) {
         ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
-        
+
       } else {
         console.log("can't figure out which touch to continue");
       }
