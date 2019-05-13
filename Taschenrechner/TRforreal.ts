@@ -1,0 +1,58 @@
+namespace TR {
+    document.addEventListener("DOMContentLoaded", init);
+    function init(): void { }
+    class Operator {
+        left: number | Operator;
+        right: number | Operator;
+        type: string;
+        constructor() {
+
+        }
+        eval(): number {
+
+            if (typeof this.right != "number") {
+                this.right = this.right.eval();
+            }
+            if (typeof this.left != "number") {
+                this.left = this.left.eval();
+            }
+            return this.calc();
+
+        }
+        calc(): number {
+            let erg: number = 0;
+            if (typeof this.right == "number" && typeof this.left == "number") {
+                switch (this.type) {
+                    case "+": {
+                        erg = this.right + this.left;
+                        break;
+                    }
+                    case "-": {
+                        erg = this.right - this.left;
+                        break;
+                    }
+                    case "/": {
+                        erg = this.right / this.left;
+                        break;
+                    }
+                    case "*": {
+                        erg = this.right * this.left;
+                        break;
+                    }
+                    default: {
+
+                        break;
+                    }
+                }
+
+                return erg;
+            }
+        }
+    }
+
+    function analyseString(): void {
+        let textarea:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById("textarea2");
+        let TextareaValue:string = textarea.value;
+
+    }
+}

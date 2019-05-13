@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "plugins": [{ "name": "typescript-tslint-plugin" }],
+      "target": "es6",
+      "module": "commonjs",
+      "sourceMap": true,
+      "noImplicitAny": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      
+    },
+    "exclude": ["node_modules"]
+  }
