@@ -5,6 +5,7 @@ namespace TR {
         left: number | Operator;
         right: number | Operator;
         type: string;
+        internalString;
         constructor() {
 
         }
@@ -28,11 +29,11 @@ namespace TR {
                         break;
                     }
                     case "-": {
-                        erg = this.right - this.left;
+                        erg = this.left - this.right;
                         break;
                     }
                     case "/": {
-                        erg = this.right / this.left;
+                        erg = this.left / this.right;
                         break;
                     }
                     case "*": {

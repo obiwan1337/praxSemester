@@ -1,0 +1,59 @@
+var KEY;
+(function (KEY) {
+    KEY["A"] = "KeyA";
+    KEY["B"] = "KeyB";
+    KEY["C"] = "KeyC";
+    KEY["D"] = "KeyD";
+    KEY["E"] = "KeyE";
+    KEY["F"] = "KeyF";
+    KEY["G"] = "KeyG";
+    KEY["H"] = "KeyH";
+    KEY["I"] = "KeyI";
+    KEY["J"] = "KeyJ";
+    KEY["K"] = "KeyK";
+    KEY["L"] = "KeyL";
+    KEY["M"] = "KeyM";
+    KEY["N"] = "KeyN";
+    KEY["O"] = "KeyO";
+    KEY["P"] = "KeyP";
+    KEY["Q"] = "KeyQ";
+    KEY["R"] = "KeyR";
+    KEY["S"] = "KeyS";
+    KEY["T"] = "KeyT";
+    KEY["U"] = "KeyU";
+    KEY["V"] = "KeyV";
+    KEY["W"] = "KeyW";
+    KEY["X"] = "KeyX";
+    KEY["Y"] = "KeyY";
+    KEY["Z"] = "KeyZ";
+    /*
+    1 = "Key1",
+    2 = "Key2",
+    3 = "Key3",
+    4 = "Key4",
+    5 = "Key5",
+    6 = "Key6",
+    7 = "Key7",
+    8 = "Key8",
+    9 = "Key9",
+    0 = "Key0",
+    
+    COMMA = "Key,",
+    DOT = "Key.",
+    MINUS = "Key-",
+    SLASH = "Key/",
+    ?="Key?",
+    +="Key+",
+    != "Key!",
+    @="Key@",
+    #="Key#",
+    $ = "Key$",
+    %= "Key%",
+    ^= "Key^",
+    &= "Key&",
+    *= "Key*",
+    OpenBracket = "Key(",
+    ClosingBracket = "Key)"
+    */
+})(KEY || (KEY = {}));
+//# sourceMappingURL=EnumTs.js.map

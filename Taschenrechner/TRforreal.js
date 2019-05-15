@@ -23,11 +23,11 @@ var TR;
                         break;
                     }
                     case "-": {
-                        erg = this.right - this.left;
+                        erg = this.left - this.right;
                         break;
                     }
                     case "/": {
-                        erg = this.right / this.left;
+                        erg = this.left / this.right;
                         break;
                     }
                     case "*": {
