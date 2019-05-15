@@ -8,5 +8,5 @@ function keymirror(_event) {
     let span = document.getElementById("okaythen");
     // body.innerHTML += KeyboardEvent
     let keycode = _event;
-    span.innerHTML += "Key: " + keycode.key + "Code: " + keycode.code + "</br>";
+    span.innerHTML += "Key: " + keycode.key + " >Code: " + keycode.code + "</br>";
 }
