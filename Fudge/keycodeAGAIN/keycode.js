@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", init);
 function init() {
     let textarea = document.getElementById("texteing");
-    textarea.addEventListener("keyup", keymirror);
+    textarea.addEventListener("keydown", keymirror);
 }
 function keymirror(_event) {
     _event.preventDefault();
