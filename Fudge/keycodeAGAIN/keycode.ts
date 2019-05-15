@@ -4,7 +4,7 @@ function init() {
     textarea.addEventListener("keydown", keymirror);
 }
 function keymirror(_event) {
-    _event.preventDefault();
+    //_event.preventDefault();
     let span = document.getElementById("okaythen");
     // body.innerHTML += KeyboardEvent
     let keycode = _event;
