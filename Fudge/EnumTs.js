@@ -167,17 +167,5 @@ var KEY;
     KEY["NUMPAD_PARENT_RIGHT"] = "NumpadParentRight";
     //android
     KEY["SLEEP"] = "Sleep";
-    /*    1 = "Key1",
-    2 = "Key2",
-    3 = "Key3",
-    4 = "Key4",
-    5 = "Key5",
-    6 = "Key6",
-    7 = "Key7",
-    8 = "Key8",
-    9 = "Key9",
-    0 = "Key0",
-   
-    */
 })(KEY || (KEY = {}));
 //# sourceMappingURL=EnumTs.js.map
