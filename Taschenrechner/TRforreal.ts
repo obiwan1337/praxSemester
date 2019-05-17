@@ -1,6 +1,11 @@
 namespace TR {
     document.addEventListener("DOMContentLoaded", init);
-    function init(): void { }
+    let textarea: HTMLTextAreaElement;
+    function init(): void {
+        textarea = <HTMLTextAreaElement>document.getElementById("textarea2");
+        let button: HTMLButtonElement = <HTMLButtonElement>document.getElementById("calc");
+        button.addEventListener("click", analyseString);
+    }
     class Operator {
         left: number | Operator;
         right: number | Operator;
@@ -52,8 +57,10 @@ namespace TR {
     }
 
     function analyseString(): void {
-        let textarea:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById("textarea2");
-        let TextareaValue:string = textarea.value;
+        let TextareaValue: string = textarea.value;
+        console.log(TextareaValue.length);
+        
+     
 
     }
 }

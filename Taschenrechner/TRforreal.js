@@ -1,7 +1,12 @@
 var TR;
 (function (TR) {
     document.addEventListener("DOMContentLoaded", init);
-    function init() { }
+    let textarea;
+    function init() {
+        textarea = document.getElementById("textarea2");
+        let button = document.getElementById("calc");
+        button.addEventListener("click", analyseString);
+    }
     class Operator {
         constructor() {
         }
@@ -43,8 +48,8 @@ var TR;
         }
     }
     function analyseString() {
-        let textarea = document.getElementById("textarea2");
         let TextareaValue = textarea.value;
+        console.log(TextareaValue.length);
     }
 })(TR || (TR = {}));
 //# sourceMappingURL=TRforreal.js.map
