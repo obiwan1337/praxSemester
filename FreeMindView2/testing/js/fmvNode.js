@@ -1,5 +1,5 @@
-var Freemind;
-(function (Freemind) {
+var Freemindtesting;
+(function (Freemindtesting) {
     class FMVNode {
         constructor(parent, ctx, content, side, folded) {
             this.bezPtX1 = 30;
@@ -125,7 +125,7 @@ var Freemind;
             }
         }
     }
-    Freemind.FMVNode = FMVNode;
+    Freemindtesting.FMVNode = FMVNode;
     class FMVRootNode extends FMVNode {
         constructor(ctx, content) {
             super(null, ctx, content, "root", false);
@@ -134,18 +134,18 @@ var Freemind;
             this.ctx.beginPath();
             this.ctx.ellipse(this.posX, this.posY, this.content.length * 5, this.content.length, 0, 0, 2 * Math.PI);
             this.pfadrect = new Path2D();
-            this.pfadrect.rect(Freemind.rootNodeX + this.content.length * 7.2 / 2, Freemind.rootNodeY + 5, this.content.length * -7.2, -25);
+            this.pfadrect.rect(Freemindtesting.rootNodeX + this.content.length * 7.2 / 2, Freemindtesting.rootNodeY + 5, this.content.length * -7.2, -25);
             this.ctx.stroke();
             this.ctx.closePath();
         }
         setPosition(_previousSiblingsWeight) {
             if (this.mapPosition == "root") {
-                this.posX = Freemind.rootNodeX;
-                this.posY = Freemind.rootNodeY;
+                this.posX = Freemindtesting.rootNodeX;
+                this.posY = Freemindtesting.rootNodeY;
             }
             super.setPosition(_previousSiblingsWeight);
         }
     }
-    Freemind.FMVRootNode = FMVRootNode;
-})(Freemind || (Freemind = {}));
+    Freemindtesting.FMVRootNode = FMVRootNode;
+})(Freemindtesting || (Freemindtesting = {}));
 //# sourceMappingURL=fmvNode.js.map
