@@ -103,8 +103,8 @@ var Freemindtesting;
                     this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -7 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -7, this.parent.posY);
                 }
             }
-            this.ctx.closePath();
             this.ctx.stroke();
+            /* this.ctx.closePath(); */
             this.ctx.beginPath();
             this.ctx.font = "14px sans-serif";
             this.ctx.fillStyle = "black";
