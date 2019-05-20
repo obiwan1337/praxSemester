@@ -36,10 +36,7 @@ namespace Freemindtesting {
 
             this.folded = folded;
 
-            if (this.parent == null) {
-
-                this.mapPosition = "root";
-            }
+            
         }
 
         setPosition(_previousSiblingsWeight: number): void {
@@ -132,9 +129,6 @@ namespace Freemindtesting {
             }
             this.ctx.stroke();
             this.ctx.closePath();
-
-
-
             this.ctx.beginPath();
             this.ctx.font = "14px sans-serif";
             this.ctx.fillStyle = "black";
@@ -160,6 +154,10 @@ namespace Freemindtesting {
             content: string
         ) {
             super(null,ctx,content,"root",false);
+            if (this.parent == null) {
+
+                this.mapPosition = "root";
+            }
         }
 
         drawFMVNode() {

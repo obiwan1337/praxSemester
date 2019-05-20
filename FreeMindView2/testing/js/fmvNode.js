@@ -13,9 +13,6 @@ var Freemindtesting;
             this.content = content;
             this.mapPosition = side;
             this.folded = folded;
-            if (this.parent == null) {
-                this.mapPosition = "root";
-            }
         }
         setPosition(_previousSiblingsWeight) {
             if (this.mapPosition == "right") {
@@ -126,6 +123,9 @@ var Freemindtesting;
     class FMVRootNode extends FMVNode {
         constructor(ctx, content) {
             super(null, ctx, content, "root", false);
+            if (this.parent == null) {
+                this.mapPosition = "root";
+            }
         }
         drawFMVNode() {
             this.ctx.beginPath();
