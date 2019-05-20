@@ -138,9 +138,8 @@ namespace Freemindtesting {
             this.ctx.beginPath();
             this.ctx.font = "14px sans-serif";
             this.ctx.fillStyle = "black";
-            if (this.mapPosition == "root") {
-                this.ctx.textAlign = "center";
-            } else if (this.mapPosition == "right") {
+            
+            if (this.mapPosition == "right") {
                 this.ctx.textAlign = "left";
             } else {
                 this.ctx.textAlign = "right";
@@ -171,14 +170,15 @@ namespace Freemindtesting {
             this.pfadrect.rect(rootNodeX + this.content.length * 7.2 / 2, rootNodeY + 5, this.content.length * -7.2, -25);
             this.ctx.stroke();
             this.ctx.closePath();
-
+            this.ctx.textAlign = "center";
+            super.drawFMVNode();
         }
         setPosition(_previousSiblingsWeight: number) {
-            if (this.mapPosition == "root") {
+            
                 this.posX = rootNodeX;
                 this.posY = rootNodeY;
                 
-            }
+            
             super.setPosition(_previousSiblingsWeight);
         }
     }

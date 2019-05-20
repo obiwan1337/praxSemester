@@ -1,0 +1,3 @@
+use myMemeDB
+db.DankestOfTheDank.insertOne({"Much dank":"such meme"})
+

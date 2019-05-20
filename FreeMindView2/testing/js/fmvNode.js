@@ -109,10 +109,7 @@ var Freemindtesting;
             this.ctx.beginPath();
             this.ctx.font = "14px sans-serif";
             this.ctx.fillStyle = "black";
-            if (this.mapPosition == "root") {
-                this.ctx.textAlign = "center";
-            }
-            else if (this.mapPosition == "right") {
+            if (this.mapPosition == "right") {
                 this.ctx.textAlign = "left";
             }
             else {
@@ -137,12 +134,12 @@ var Freemindtesting;
             this.pfadrect.rect(Freemindtesting.rootNodeX + this.content.length * 7.2 / 2, Freemindtesting.rootNodeY + 5, this.content.length * -7.2, -25);
             this.ctx.stroke();
             this.ctx.closePath();
+            this.ctx.textAlign = "center";
+            super.drawFMVNode();
         }
         setPosition(_previousSiblingsWeight) {
-            if (this.mapPosition == "root") {
-                this.posX = Freemindtesting.rootNodeX;
-                this.posY = Freemindtesting.rootNodeY;
-            }
+            this.posX = Freemindtesting.rootNodeX;
+            this.posY = Freemindtesting.rootNodeY;
             super.setPosition(_previousSiblingsWeight);
         }
     }
