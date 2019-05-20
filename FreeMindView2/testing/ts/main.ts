@@ -124,7 +124,7 @@ namespace Freemindtesting {
     root.calculateVisibleChildren();
     root.setPosition(0);
     root.drawFMVNode();
-    console.log(fmvNodes, " fmvNodes");
+
 
 
   }
@@ -173,7 +173,7 @@ namespace Freemindtesting {
     let childElements: Element[] = new Array();
     // get all children of parent as Element collection. Gets ALL children!
     childElementsCollection = parent.getElementsByTagName("node");
-    console.log(childElementsCollection.length + "child elementcollection length");
+
     for (let i: number = 0; i < childElementsCollection.length; i++) {
       if (childElementsCollection[i].parentElement == parent) {
         // save only the children with correct parent element
@@ -200,20 +200,20 @@ namespace Freemindtesting {
    } */
 
   function keyboardInput(_event: KeyboardEvent): void {
-    
+    console.log(_event.keyCode);
     if (_event.keyCode == 32) {
 
       // check if an input is currently in focus
       if (document.activeElement.nodeName.toLowerCase() != "input") {
         // prevent default spacebar event (scrolling to bottom)
         _event.preventDefault();
-        rootNodeX = canvas.width/2;
-        rootNodeY = canvas.height/2;
+        rootNodeX = canvas.width / 2;
+        rootNodeY = canvas.height / 2;
         redrawWithoutChildren();
       }
+    }
   }
-}
-  
+
   function onMouseDown(_event: MouseEvent): void {
     hasMouseBeenMoved = false;
   }
@@ -221,9 +221,11 @@ namespace Freemindtesting {
     if (hasMouseBeenMoved) {
       return;
     }
-    console.log("mausnichtbewegt");
+
     if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
       for (let i: number = 0; i < fmvNodes.length; i++) {
+        if (fmvNodes[i].mapPosition == "root")
+          fmvNodes[i].folded == false;
         fmvNodes[i].folded = false;
         fmvNodes[0].calculateVisibleChildren();
         redrawWithoutChildren();
@@ -232,7 +234,10 @@ namespace Freemindtesting {
       for (let i: number = 0; i < fmvNodes.length; i++) {
         console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
         if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
+
           fmvNodes[i].folded = !fmvNodes[i].folded;
+          if (fmvNodes[i].mapPosition == "root")
+            fmvNodes[i].folded == false;
           fmvNodes[0].calculateVisibleChildren();
           redrawWithoutChildren();
         }
@@ -343,7 +348,7 @@ namespace Freemindtesting {
     }
     return -1;    // not found
   }
-  
+
   // parses URL parameters to object
   function getUrlSearchJson(): URLObject {
     try {

@@ -98,7 +98,6 @@ var Freemindtesting;
         root.calculateVisibleChildren();
         root.setPosition(0);
         root.drawFMVNode();
-        console.log(fmvNodes, " fmvNodes");
     }
     function createFMVNodes(rootNode, parentFMVNode) {
         // only continue if current root has children
@@ -134,7 +133,6 @@ var Freemindtesting;
         let childElements = new Array();
         // get all children of parent as Element collection. Gets ALL children!
         childElementsCollection = parent.getElementsByTagName("node");
-        console.log(childElementsCollection.length + "child elementcollection length");
         for (let i = 0; i < childElementsCollection.length; i++) {
             if (childElementsCollection[i].parentElement == parent) {
                 // save only the children with correct parent element
@@ -158,6 +156,7 @@ var Freemindtesting;
        }
      } */
     function keyboardInput(_event) {
+        console.log(_event.keyCode);
         if (_event.keyCode == 32) {
             // check if an input is currently in focus
             if (document.activeElement.nodeName.toLowerCase() != "input") {
@@ -176,9 +175,10 @@ var Freemindtesting;
         if (hasMouseBeenMoved) {
             return;
         }
-        console.log("mausnichtbewegt");
         if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
             for (let i = 0; i < fmvNodes.length; i++) {
+                if (fmvNodes[i].mapPosition == "root")
+                    fmvNodes[i].folded == false;
                 fmvNodes[i].folded = false;
                 fmvNodes[0].calculateVisibleChildren();
                 redrawWithoutChildren();
@@ -189,6 +189,8 @@ var Freemindtesting;
                 console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
                 if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
                     fmvNodes[i].folded = !fmvNodes[i].folded;
+                    if (fmvNodes[i].mapPosition == "root")
+                        fmvNodes[i].folded == false;
                     fmvNodes[0].calculateVisibleChildren();
                     redrawWithoutChildren();
                 }

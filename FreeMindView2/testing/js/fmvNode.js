@@ -108,11 +108,11 @@ var Freemindtesting;
             this.ctx.beginPath();
             this.ctx.font = "14px sans-serif";
             this.ctx.fillStyle = "black";
-            if (this.mapPosition == "right") {
-                this.ctx.textAlign = "left";
-            }
-            else if (this.mapPosition == "root") {
+            if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
+            }
+            else if (this.mapPosition == "right") {
+                this.ctx.textAlign = "left";
             }
             else {
                 this.ctx.textAlign = "right";

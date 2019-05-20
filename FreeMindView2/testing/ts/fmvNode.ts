@@ -131,17 +131,18 @@ namespace Freemindtesting {
                 }
             }
             this.ctx.stroke();
-            /* this.ctx.closePath(); */
+            /* this.ctx.closePath(); */ 
             this.ctx.beginPath();
             this.ctx.font = "14px sans-serif";
             this.ctx.fillStyle = "black";
 
-            if (this.mapPosition == "right") {
-                this.ctx.textAlign = "left";
-            } else if(this.mapPosition == "root"){
+            if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
+                
+            } else if (this.mapPosition == "right") {
+                this.ctx.textAlign = "left";
             } else {
-            this.ctx.textAlign = "right";
+                this.ctx.textAlign = "right";
             }
             this.ctx.fillText(this.content, this.posX, this.posY);
             this.ctx.closePath();
@@ -173,7 +174,7 @@ namespace Freemindtesting {
             this.pfadrect.rect(rootNodeX + this.content.length * 7.2 / 2, rootNodeY + 5, this.content.length * -7.2, -25);
             this.ctx.stroke();
             this.ctx.closePath();
-            
+
             super.drawFMVNode();
         }
         setPosition(_previousSiblingsWeight: number) {
