@@ -111,6 +111,9 @@ var Freemindtesting;
             if (this.mapPosition == "right") {
                 this.ctx.textAlign = "left";
             }
+            else if (this.mapPosition == "root") {
+                this.ctx.textAlign = "center";
+            }
             else {
                 this.ctx.textAlign = "right";
             }
@@ -136,7 +139,6 @@ var Freemindtesting;
             this.pfadrect.rect(Freemindtesting.rootNodeX + this.content.length * 7.2 / 2, Freemindtesting.rootNodeY + 5, this.content.length * -7.2, -25);
             this.ctx.stroke();
             this.ctx.closePath();
-            this.ctx.textAlign = "center";
             super.drawFMVNode();
         }
         setPosition(_previousSiblingsWeight) {
