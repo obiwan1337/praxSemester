@@ -187,7 +187,7 @@ var Freemindtesting;
                 //console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
                 if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
                     fmvNodes[i].folded = !fmvNodes[i].folded;
-                    if (i > 0 /* && fmvNodes[i].parent.mapPosition == "root" */) {
+                    if (i < 0 /* && fmvNodes[i].parent.mapPosition == "root" */) {
                         console.log("boi i shuld be false");
                         fmvNodes[i].folded = false;
                     }
