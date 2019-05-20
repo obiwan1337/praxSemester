@@ -177,8 +177,6 @@ var Freemindtesting;
         }
         if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
             for (let i = 0; i < fmvNodes.length; i++) {
-                if (fmvNodes[i].mapPosition == "root")
-                    fmvNodes[i].folded == false;
                 fmvNodes[i].folded = false;
                 fmvNodes[0].calculateVisibleChildren();
                 redrawWithoutChildren();
@@ -189,8 +187,8 @@ var Freemindtesting;
                 console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
                 if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
                     fmvNodes[i].folded = !fmvNodes[i].folded;
-                    if (fmvNodes[i].mapPosition == "root")
-                        fmvNodes[i].folded == false;
+                    if (fmvNodes[i].parent.mapPosition == "root")
+                        fmvNodes[i].folded = false;
                     fmvNodes[0].calculateVisibleChildren();
                     redrawWithoutChildren();
                 }
