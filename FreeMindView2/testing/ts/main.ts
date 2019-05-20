@@ -230,7 +230,7 @@ namespace Freemindtesting {
       }
     } else {
       for (let i: number = 0; i < fmvNodes.length; i++) {
-        console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
+        //console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
         if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
 
           fmvNodes[i].folded = !fmvNodes[i].folded;
