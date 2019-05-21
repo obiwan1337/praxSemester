@@ -128,6 +128,7 @@ var Freemindtesting;
     class FMVRootNode extends FMVNode {
         constructor(ctx, content) {
             super(null, ctx, content, "root", false);
+            this.hiddenFoldedValue = false;
             if (this.parent == null) {
                 this.mapPosition = "root";
             }

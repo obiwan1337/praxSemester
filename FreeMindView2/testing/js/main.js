@@ -175,27 +175,24 @@ var Freemindtesting;
         if (hasMouseBeenMoved) {
             return;
         }
-        if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
-            for (let i = 0; i < fmvNodes.length; i++) {
-                fmvNodes[i].folded = false;
-                fmvNodes[0].calculateVisibleChildren();
-                redrawWithoutChildren();
+        if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY)) {
+            fmvNodes[0].hiddenFoldedValue = !fmvNodes[0].hiddenFoldedValue;
+            let newFold = fmvNodes[0].hiddenFoldedValue;
+            for (let i = 1; i < fmvNodes.length; i++) {
+                fmvNodes[i].folded = newFold;
             }
         }
         else {
-            for (let i = 0; i < fmvNodes.length; i++) {
+            for (let i = 1; i < fmvNodes.length; i++) {
                 //console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
                 if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
                     fmvNodes[i].folded = !fmvNodes[i].folded;
-                    if (i < 0 /* && fmvNodes[i].parent.mapPosition == "root" */) {
-                        console.log("boi i shuld be false");
-                        fmvNodes[i].folded = false;
-                    }
-                    fmvNodes[0].calculateVisibleChildren();
-                    redrawWithoutChildren();
                 }
             }
         }
+        fmvNodes[0].folded = false;
+        fmvNodes[0].calculateVisibleChildren();
+        redrawWithoutChildren();
     }
     function onPointerMove(_event) {
         hasMouseBeenMoved = true;

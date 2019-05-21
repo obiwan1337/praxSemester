@@ -131,14 +131,14 @@ namespace Freemindtesting {
                 }
             }
             this.ctx.stroke();
-            /* this.ctx.closePath(); */ 
+            /* this.ctx.closePath(); */
             this.ctx.beginPath();
             this.ctx.font = "14px sans-serif";
             this.ctx.fillStyle = "black";
 
             if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
-                
+
             } else if (this.mapPosition == "right") {
                 this.ctx.textAlign = "left";
             } else {
@@ -154,10 +154,11 @@ namespace Freemindtesting {
     }
 
     export class FMVRootNode extends FMVNode {
-
+        hiddenFoldedValue: boolean = false;
         constructor(
             ctx: CanvasRenderingContext2D,
             content: string
+
         ) {
             super(null, ctx, content, "root", false);
             if (this.parent == null) {

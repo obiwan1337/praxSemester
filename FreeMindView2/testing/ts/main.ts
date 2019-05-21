@@ -222,27 +222,26 @@ namespace Freemindtesting {
       return;
     }
 
-    if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
-      for (let i: number = 0; i < fmvNodes.length; i++) {
-        fmvNodes[i].folded = false;
-        fmvNodes[0].calculateVisibleChildren();
-        redrawWithoutChildren();
+    if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY)) {
+      (<FMVRootNode> fmvNodes[0]).hiddenFoldedValue = !(<FMVRootNode> fmvNodes[0]).hiddenFoldedValue;
+      let newFold: boolean = (<FMVRootNode> fmvNodes[0]).hiddenFoldedValue;
+      for (let i: number = 1; i < fmvNodes.length; i++) {
+        fmvNodes[i].folded = newFold;
       }
+
     } else {
-      for (let i: number = 0; i < fmvNodes.length; i++) {
+      for (let i: number = 1; i < fmvNodes.length; i++) {
         //console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
         if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
 
           fmvNodes[i].folded = !fmvNodes[i].folded;
-          if (i < 0 /* && fmvNodes[i].parent.mapPosition == "root" */) {
-            console.log("boi i shuld be false");
-            fmvNodes[i].folded = false;
-          }
-          fmvNodes[0].calculateVisibleChildren();
-          redrawWithoutChildren();
         }
       }
     }
+    fmvNodes[0].folded=false;
+    fmvNodes[0].calculateVisibleChildren();
+    redrawWithoutChildren();
+    
   }
   function onPointerMove(_event: MouseEvent): void {
     hasMouseBeenMoved = true;
