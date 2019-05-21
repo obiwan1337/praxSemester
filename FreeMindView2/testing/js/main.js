@@ -17,6 +17,7 @@ var Freemindtesting;
     let mindmapData;
     let docNode; // document node is the first node in a xml file
     let rootNode; // first actual node of the mindmap
+    let root;
     let fmvNodes;
     let hasMouseBeenMoved = false;
     //let url: string;
@@ -76,7 +77,7 @@ var Freemindtesting;
         canvas.addEventListener("mousemove", onPointerMove);
         canvas.addEventListener("mousedown", onMouseDown);
         canvas.addEventListener("mouseup", onMouseUp);
-        canvas.addEventListener("keyboardinput", keyboardInput);
+        window.addEventListener("keydown", keyboardInput);
         canvas.addEventListener("touchstart", handleStart, false);
         canvas.addEventListener("touchend", handleEnd, false);
         canvas.addEventListener("touchcancel", handleCancel, false);
@@ -85,13 +86,13 @@ var Freemindtesting;
     }
     function resizecanvas() {
         createCanvas();
-        fmvNodes[0].drawFMVNode();
+        root.drawFMVNode();
     }
     function createMindmap() {
         clearMap();
         fmvNodes.length = 0;
         // create root FMVNode
-        let root = new Freemindtesting.FMVRootNode(ctx, rootNode.getAttribute("TEXT"));
+        root = new Freemindtesting.FMVRootNode(ctx, rootNode.getAttribute("TEXT"));
         fmvNodes.push(root);
         // Use root FMVNode as starting point and create all subFMVNodes
         createFMVNodes(rootNode, root);
@@ -143,8 +144,8 @@ var Freemindtesting;
     }
     function redrawWithoutChildren() {
         clearMap();
-        fmvNodes[0].setPosition(0);
-        fmvNodes[0].drawFMVNode();
+        root.setPosition(0);
+        root.drawFMVNode();
     }
     /*  function createNewEntry(_x: number, _y: number) {
    
@@ -157,7 +158,7 @@ var Freemindtesting;
      } */
     function keyboardInput(_event) {
         console.log(_event.keyCode);
-        if (_event.keyCode == 32) {
+        if (_event.code == "Space") {
             // check if an input is currently in focus
             if (document.activeElement.nodeName.toLowerCase() != "input") {
                 // prevent default spacebar event (scrolling to bottom)
@@ -175,23 +176,25 @@ var Freemindtesting;
         if (hasMouseBeenMoved) {
             return;
         }
-        if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY)) {
-            fmvNodes[0].hiddenFoldedValue = !fmvNodes[0].hiddenFoldedValue;
-            let newFold = fmvNodes[0].hiddenFoldedValue;
+        if (ctx.isPointInPath(root.pfadrect, _event.clientX, _event.clientY)) {
+            root.hiddenFoldedValue = !root.hiddenFoldedValue;
+            let newFold = root.hiddenFoldedValue;
             for (let i = 1; i < fmvNodes.length; i++) {
                 fmvNodes[i].folded = newFold;
             }
         }
         else {
             for (let i = 1; i < fmvNodes.length; i++) {
-                //console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
-                if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
-                    fmvNodes[i].folded = !fmvNodes[i].folded;
+                console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
+                if (fmvNodes[i].pfadrect) {
+                    if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
+                        fmvNodes[i].folded = !fmvNodes[i].folded;
+                    }
                 }
             }
         }
-        fmvNodes[0].folded = false;
-        fmvNodes[0].calculateVisibleChildren();
+        root.folded = false;
+        root.calculateVisibleChildren();
         redrawWithoutChildren();
     }
     function onPointerMove(_event) {

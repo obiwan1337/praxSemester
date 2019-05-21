@@ -96,15 +96,15 @@ namespace Freemindtesting {
             //rectangles um den text
             if (this.mapPosition == "left") {
                 startX = this.posX;
-
+                
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, this.content.length * -7.2, -25);
-                //this.ctx.stroke(this.pfadrect);
+                this.ctx.stroke(this.pfadrect);
             } else if (this.mapPosition == "right") {
                 startX = this.posX;
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, this.content.length * 7.2, -25);
-                //this.ctx.stroke(this.pfadrect);
+                this.ctx.stroke(this.pfadrect);
             }
             if (this.parent) {
 
@@ -122,12 +122,12 @@ namespace Freemindtesting {
                 } else if (this.mapPosition == "right") {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * 7 + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * 7, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * 6.95 + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * 6.95, this.parent.posY);
                 } else {
                     //this.ctx.lineTo(this.parent.posX + this.parent.content.length * -7, this.parent.posY);
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -7 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -7, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -6.95 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -6.95, this.parent.posY);
                 }
             }
             this.ctx.stroke();
@@ -170,7 +170,7 @@ namespace Freemindtesting {
         drawFMVNode() {
 
             this.ctx.beginPath();
-            this.ctx.ellipse(this.posX, this.posY, this.content.length * 5, this.content.length, 0, 0, 2 * Math.PI);
+            this.ctx.ellipse(this.posX, this.posY, this.content.length * 6, this.content.length, 0, 0, 2 * Math.PI);
             this.pfadrect = new Path2D();
             this.pfadrect.rect(rootNodeX + this.content.length * 7.2 / 2, rootNodeY + 5, this.content.length * -7.2, -25);
             this.ctx.stroke();
