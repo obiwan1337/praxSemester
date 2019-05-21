@@ -6,10 +6,12 @@ var Freemindtesting;
             this.bezPtX2 = 30;
             this.bezPtY1 = 0;
             this.bezPtY2 = 0;
+            this.contentWidth = 0;
             this.childHight = 30;
             this.parent = parent;
             this.children = new Array();
             this.ctx = ctx;
+            this.contentWidth = ctx.measureText(content).width;
             this.content = content;
             this.mapPosition = side;
             this.folded = folded;
@@ -68,13 +70,13 @@ var Freemindtesting;
             if (this.mapPosition == "left") {
                 startX = this.posX;
                 this.pfadrect = new Path2D();
-                this.pfadrect.rect(startX, this.posY + 5, this.content.length * -7.2, -25);
+                this.pfadrect.rect(startX, this.posY + 5, -this.contentWidth, -25);
                 this.ctx.stroke(this.pfadrect);
             }
             else if (this.mapPosition == "right") {
                 startX = this.posX;
                 this.pfadrect = new Path2D();
-                this.pfadrect.rect(startX, this.posY + 5, this.content.length * 7.2, -25);
+                this.pfadrect.rect(startX, this.posY + 5, this.contentWidth, -25);
                 this.ctx.stroke(this.pfadrect);
             }
             if (this.parent) {
@@ -84,23 +86,23 @@ var Freemindtesting;
                 if (this.parent.mapPosition == "root" && this.mapPosition == "right") {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * 5 + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * 5, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.contentWidth + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.contentWidth, this.parent.posY);
                 }
                 else if (this.parent.mapPosition == "root" && this.mapPosition == "left") {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -5 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -5, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX - this.parent.contentWidth - this.bezPtX2, this.parent.posY, this.parent.posX - this.parent.contentWidth, this.parent.posY);
                 }
                 else if (this.mapPosition == "right") {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * 6.95 + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * 6.95, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.contentWidth + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.contentWidth, this.parent.posY);
                 }
                 else {
                     //this.ctx.lineTo(this.parent.posX + this.parent.content.length * -7, this.parent.posY);
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -6.95 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -6.95, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX - this.parent.contentWidth - this.bezPtX2, this.parent.posY, this.parent.posX - this.parent.contentWidth, this.parent.posY);
                 }
             }
             this.ctx.stroke();
@@ -135,9 +137,10 @@ var Freemindtesting;
         }
         drawFMVNode() {
             this.ctx.beginPath();
-            this.ctx.ellipse(this.posX, this.posY, this.content.length * 6, this.content.length, 0, 0, 2 * Math.PI);
+            this.ctx.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth, 0, 0, 2 * Math.PI);
             this.pfadrect = new Path2D();
-            this.pfadrect.rect(Freemindtesting.rootNodeX + this.content.length * 7.2 / 2, Freemindtesting.rootNodeY + 5, this.content.length * -7.2, -25);
+            this.pfadrect.rect(Freemindtesting.rootNodeX + this.contentWidth / 2, Freemindtesting.rootNodeY + 5, -this.contentWidth, -25);
+            this.ctx.stroke(this.pfadrect);
             this.ctx.stroke();
             this.ctx.closePath();
             super.drawFMVNode();
