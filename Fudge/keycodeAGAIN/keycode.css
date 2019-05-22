@@ -1,11 +1,11 @@
-
 #ultratabelle {
     position: relative;
     left: 5px;
 }
-img {
+
+#fantasy {
     position: fixed;
     right: 100px;
     top: 150px;
-    
+
 }
