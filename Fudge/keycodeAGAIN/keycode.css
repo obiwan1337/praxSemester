@@ -1,8 +1,10 @@
-#okaythen{
+
+#ultratabelle{
     position: absolute;
-    right: 5px;
+    left: 5px;
 }
-#texteing {
-    position:absolute;
+#bildchenfürjirka {
+    position:sticky;
+    right:5px;
     left:5px;
 }
