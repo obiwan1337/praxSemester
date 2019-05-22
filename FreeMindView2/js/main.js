@@ -6,8 +6,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var Freemind;
-(function (Freemind) {
+var Freemindtesting;
+(function (Freemindtesting) {
     window.addEventListener("load", init);
     let params;
     //let body: HTMLBodyElement = document.getElementsByTagName("body")[0];
@@ -17,6 +17,7 @@ var Freemind;
     let mindmapData;
     let docNode; // document node is the first node in a xml file
     let rootNode; // first actual node of the mindmap
+    let root;
     let fmvNodes;
     let hasMouseBeenMoved = false;
     //let url: string;
@@ -69,14 +70,14 @@ var Freemind;
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
         // determine the center of the canvas
-        Freemind.rootNodeX = ctx.canvas.width / 2;
-        Freemind.rootNodeY = ctx.canvas.height / 2;
+        Freemindtesting.rootNodeX = ctx.canvas.width / 2;
+        Freemindtesting.rootNodeY = ctx.canvas.height / 2;
         // Eventlistener for draggable canvas
         //canvas.addEventListener("mousedown", handleMouseDown);
         canvas.addEventListener("mousemove", onPointerMove);
         canvas.addEventListener("mousedown", onMouseDown);
         canvas.addEventListener("mouseup", onMouseUp);
-        canvas.addEventListener("keyboardinput", keyboardInput);
+        window.addEventListener("keydown", keyboardInput);
         canvas.addEventListener("touchstart", handleStart, false);
         canvas.addEventListener("touchend", handleEnd, false);
         canvas.addEventListener("touchcancel", handleCancel, false);
@@ -85,20 +86,19 @@ var Freemind;
     }
     function resizecanvas() {
         createCanvas();
-        fmvNodes[0].drawFMVNode();
+        root.drawFMVNode();
     }
     function createMindmap() {
         clearMap();
         fmvNodes.length = 0;
         // create root FMVNode
-        let root = new Freemind.FMVNode(null, ctx, rootNode.getAttribute("TEXT"), "root", false);
+        root = new Freemindtesting.FMVRootNode(ctx, rootNode.getAttribute("TEXT"));
         fmvNodes.push(root);
         // Use root FMVNode as starting point and create all subFMVNodes
         createFMVNodes(rootNode, root);
         root.calculateVisibleChildren();
         root.setPosition(0);
         root.drawFMVNode();
-        console.log(fmvNodes, " fmvNodes");
     }
     function createFMVNodes(rootNode, parentFMVNode) {
         // only continue if current root has children
@@ -116,7 +116,7 @@ var Freemind;
                     }
                     let fmvNodeFolded = children[i].getAttribute("FOLDED");
                     let fmvNodeFoldedBool = fmvNodeFolded == "true" ? true : false;
-                    let fmvNode = new Freemind.FMVNode(parentFMVNode, ctx, fmvNodeContent, fmvNodeMapPosition, fmvNodeFoldedBool);
+                    let fmvNode = new Freemindtesting.FMVNode(parentFMVNode, ctx, fmvNodeContent, fmvNodeMapPosition, fmvNodeFoldedBool);
                     childFMVNodes.push(fmvNode);
                     fmvNodes.push(fmvNode);
                     parentFMVNode.children = childFMVNodes;
@@ -134,7 +134,6 @@ var Freemind;
         let childElements = new Array();
         // get all children of parent as Element collection. Gets ALL children!
         childElementsCollection = parent.getElementsByTagName("node");
-        console.log(childElementsCollection.length + "child elementcollection length");
         for (let i = 0; i < childElementsCollection.length; i++) {
             if (childElementsCollection[i].parentElement == parent) {
                 // save only the children with correct parent element
@@ -145,8 +144,8 @@ var Freemind;
     }
     function redrawWithoutChildren() {
         clearMap();
-        fmvNodes[0].setPosition(0);
-        fmvNodes[0].drawFMVNode();
+        root.setPosition(0);
+        root.drawFMVNode();
     }
     /*  function createNewEntry(_x: number, _y: number) {
    
@@ -157,11 +156,18 @@ var Freemind;
          }
        }
      } */
-    function keyboardInput(e) {
-        let type = e.type;
-        let key = e.key;
-        let code = e.code;
-        console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
+    function keyboardInput(_event) {
+        console.log(_event.keyCode);
+        if (_event.code == "Space") {
+            // check if an input is currently in focus
+            if (document.activeElement.nodeName.toLowerCase() != "input") {
+                // prevent default spacebar event (scrolling to bottom)
+                _event.preventDefault();
+                Freemindtesting.rootNodeX = canvas.width / 2;
+                Freemindtesting.rootNodeY = canvas.height / 2;
+                redrawWithoutChildren();
+            }
+        }
     }
     function onMouseDown(_event) {
         hasMouseBeenMoved = false;
@@ -170,30 +176,32 @@ var Freemind;
         if (hasMouseBeenMoved) {
             return;
         }
-        console.log("mausnichtbewegt");
-        if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
-            for (let i = 0; i < fmvNodes.length; i++) {
-                fmvNodes[i].folded = false;
-                fmvNodes[0].calculateVisibleChildren();
-                redrawWithoutChildren();
+        if (ctx.isPointInPath(root.pfadrect, _event.clientX, _event.clientY)) {
+            root.hiddenFoldedValue = !root.hiddenFoldedValue;
+            let newFold = root.hiddenFoldedValue;
+            for (let i = 1; i < fmvNodes.length; i++) {
+                fmvNodes[i].folded = newFold;
             }
         }
         else {
-            for (let i = 0; i < fmvNodes.length; i++) {
+            for (let i = 1; i < fmvNodes.length; i++) {
                 console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
-                if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
-                    fmvNodes[i].folded = !fmvNodes[i].folded;
-                    fmvNodes[0].calculateVisibleChildren();
-                    redrawWithoutChildren();
+                if (fmvNodes[i].pfadrect) {
+                    if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
+                        fmvNodes[i].folded = !fmvNodes[i].folded;
+                    }
                 }
             }
         }
+        root.folded = false;
+        root.calculateVisibleChildren();
+        redrawWithoutChildren();
     }
     function onPointerMove(_event) {
         hasMouseBeenMoved = true;
         if (_event.buttons == 1) {
-            Freemind.rootNodeY += _event.movementY;
-            Freemind.rootNodeX += _event.movementX;
+            Freemindtesting.rootNodeY += _event.movementY;
+            Freemindtesting.rootNodeX += _event.movementX;
             redrawWithoutChildren();
         }
     }
@@ -224,8 +232,8 @@ var Freemind;
             let yStrich = touches[i].clientY;
             deltaX = xStrich - cordX;
             deltaY = yStrich - cordY;
-            Freemind.rootNodeX += deltaX;
-            Freemind.rootNodeY += deltaY;
+            Freemindtesting.rootNodeX += deltaX;
+            Freemindtesting.rootNodeY += deltaY;
             console.log(deltaX, deltaY, cordX, cordY, xStrich, yStrich);
             cordX = xStrich;
             cordY = yStrich;
@@ -294,5 +302,5 @@ var Freemind;
             return JSON.parse("{}");
         }
     }
-})(Freemind || (Freemind = {}));
+})(Freemindtesting || (Freemindtesting = {}));
 //# sourceMappingURL=main.js.map

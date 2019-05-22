@@ -11,7 +11,6 @@ var Freemindtesting;
             this.parent = parent;
             this.children = new Array();
             this.ctx = ctx;
-            this.contentWidth = ctx.measureText(content).width;
             this.content = content;
             this.mapPosition = side;
             this.folded = folded;
@@ -65,7 +64,10 @@ var Freemindtesting;
             return this.weightVisibleChildrenLeft;
         }
         drawFMVNode() {
+            this.ctx.font = "14px sans-serif";
+            this.ctx.fillStyle = "black";
             let startX;
+            this.contentWidth = this.ctx.measureText(this.content).width;
             //rectangles um den text
             if (this.mapPosition == "left") {
                 startX = this.posX;
@@ -108,8 +110,6 @@ var Freemindtesting;
             this.ctx.stroke();
             /* this.ctx.closePath(); */
             this.ctx.beginPath();
-            this.ctx.font = "14px sans-serif";
-            this.ctx.fillStyle = "black";
             if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
             }
@@ -136,13 +136,12 @@ var Freemindtesting;
             }
         }
         drawFMVNode() {
-            this.ctx.beginPath();
-            this.ctx.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth, 0, 0, 2 * Math.PI);
+            this.ctx.font = "14px sans-serif";
+            this.ctx.fillStyle = "black";
+            this.contentWidth = this.ctx.measureText(this.content).width;
             this.pfadrect = new Path2D();
-            this.pfadrect.rect(Freemindtesting.rootNodeX + this.contentWidth / 2, Freemindtesting.rootNodeY + 5, -this.contentWidth, -25);
+            this.pfadrect.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth / 2, 0, 0, 2 * Math.PI);
             this.ctx.stroke(this.pfadrect);
-            this.ctx.stroke();
-            this.ctx.closePath();
             super.drawFMVNode();
         }
         setPosition(_previousSiblingsWeight) {

@@ -1,11 +1,12 @@
-var Freemind;
-(function (Freemind) {
+var Freemindtesting;
+(function (Freemindtesting) {
     class FMVNode {
         constructor(parent, ctx, content, side, folded) {
             this.bezPtX1 = 30;
             this.bezPtX2 = 30;
             this.bezPtY1 = 0;
             this.bezPtY2 = 0;
+            this.contentWidth = 0;
             this.childHight = 30;
             this.parent = parent;
             this.children = new Array();
@@ -13,16 +14,8 @@ var Freemind;
             this.content = content;
             this.mapPosition = side;
             this.folded = folded;
-            if (this.parent == null) {
-                this.mapPosition = "root";
-            }
         }
         setPosition(_previousSiblingsWeight) {
-            // place root node in the center of the canvas
-            if (this.mapPosition == "root") {
-                this.posX = Freemind.rootNodeX;
-                this.posY = Freemind.rootNodeY;
-            }
             if (this.mapPosition == "right") {
                 this.posX = this.parent.posX + this.parent.content.length * 7 + 70;
                 this.posY = this.calculateHighestPoint(this.parent.posY, this.parent.weightVisibleChildrenRight, this.childHight, _previousSiblingsWeight, this.weightVisibleChildrenRight);
@@ -71,59 +64,52 @@ var Freemind;
             return this.weightVisibleChildrenLeft;
         }
         drawFMVNode() {
-            if (this.mapPosition == "root") {
-                this.ctx.beginPath();
-                this.ctx.ellipse(this.posX, this.posY, this.content.length * 5, this.content.length, 0, 0, 2 * Math.PI);
+            this.ctx.font = "14px sans-serif";
+            this.ctx.fillStyle = "black";
+            let startX;
+            this.contentWidth = this.ctx.measureText(this.content).width;
+            //rectangles um den text
+            if (this.mapPosition == "left") {
+                startX = this.posX;
                 this.pfadrect = new Path2D();
-                this.pfadrect.rect(Freemind.rootNodeX + this.content.length * 7.2 / 2, Freemind.rootNodeY + 5, this.content.length * -7.2, -25);
-                this.ctx.stroke();
-                this.ctx.closePath();
+                this.pfadrect.rect(startX, this.posY + 5, -this.contentWidth, -25);
+                this.ctx.stroke(this.pfadrect);
             }
-            else {
-                let startX;
-                //rectangles um den text
-                if (this.mapPosition == "left") {
-                    startX = this.posX;
-                    this.pfadrect = new Path2D();
-                    this.pfadrect.rect(startX, this.posY + 5, this.content.length * -7.2, -25);
-                    //this.ctx.stroke(this.pfadrect);
-                }
-                else if (this.mapPosition == "right") {
-                    startX = this.posX;
-                    this.pfadrect = new Path2D();
-                    this.pfadrect.rect(startX, this.posY + 5, this.content.length * 7.2, -25);
-                    //this.ctx.stroke(this.pfadrect);
-                }
+            else if (this.mapPosition == "right") {
+                startX = this.posX;
+                this.pfadrect = new Path2D();
+                this.pfadrect.rect(startX, this.posY + 5, this.contentWidth, -25);
+                this.ctx.stroke(this.pfadrect);
+            }
+            if (this.parent) {
                 // verbindungslinie von kasten zu kasten
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.posX, this.posY);
                 if (this.parent.mapPosition == "root" && this.mapPosition == "right") {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * 5 + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * 5, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.contentWidth + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.contentWidth, this.parent.posY);
                 }
                 else if (this.parent.mapPosition == "root" && this.mapPosition == "left") {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -5 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -5, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX - this.parent.contentWidth - this.bezPtX2, this.parent.posY, this.parent.posX - this.parent.contentWidth, this.parent.posY);
                 }
                 else if (this.mapPosition == "right") {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * 7 + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * 7, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX - this.bezPtX1, this.posY, this.parent.posX + this.parent.contentWidth + this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.contentWidth, this.parent.posY);
                 }
                 else {
                     //this.ctx.lineTo(this.parent.posX + this.parent.content.length * -7, this.parent.posY);
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.posX, this.posY);
-                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX + this.parent.content.length * -7 - this.bezPtX2, this.parent.posY, this.parent.posX + this.parent.content.length * -7, this.parent.posY);
+                    this.ctx.bezierCurveTo(this.posX + this.bezPtX1, this.posY, this.parent.posX - this.parent.contentWidth - this.bezPtX2, this.parent.posY, this.parent.posX - this.parent.contentWidth, this.parent.posY);
                 }
-                this.ctx.stroke();
-                this.ctx.closePath();
             }
+            this.ctx.stroke();
+            /* this.ctx.closePath(); */
             this.ctx.beginPath();
-            this.ctx.font = "14px sans-serif";
-            this.ctx.fillStyle = "black";
             if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
             }
@@ -140,6 +126,30 @@ var Freemind;
             }
         }
     }
-    Freemind.FMVNode = FMVNode;
-})(Freemind || (Freemind = {}));
+    Freemindtesting.FMVNode = FMVNode;
+    class FMVRootNode extends FMVNode {
+        constructor(ctx, content) {
+            super(null, ctx, content, "root", false);
+            this.hiddenFoldedValue = false;
+            if (this.parent == null) {
+                this.mapPosition = "root";
+            }
+        }
+        drawFMVNode() {
+            this.ctx.font = "14px sans-serif";
+            this.ctx.fillStyle = "black";
+            this.contentWidth = this.ctx.measureText(this.content).width;
+            this.pfadrect = new Path2D();
+            this.pfadrect.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth / 2, 0, 0, 2 * Math.PI);
+            this.ctx.stroke(this.pfadrect);
+            super.drawFMVNode();
+        }
+        setPosition(_previousSiblingsWeight) {
+            this.posX = Freemindtesting.rootNodeX;
+            this.posY = Freemindtesting.rootNodeY;
+            super.setPosition(_previousSiblingsWeight);
+        }
+    }
+    Freemindtesting.FMVRootNode = FMVRootNode;
+})(Freemindtesting || (Freemindtesting = {}));
 //# sourceMappingURL=fmvNode.js.map

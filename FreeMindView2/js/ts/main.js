@@ -48,7 +48,7 @@ var Freemind;
     }
     function fetchXML() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch('./mm/test.mm');
+            const response = yield fetch('./mm/EIA2.mm');
             const xmlText = yield response.text();
             mindmapData = StringToXML(xmlText); // Save xml in letiable
         });
@@ -91,7 +91,7 @@ var Freemind;
         clearMap();
         fmvNodes.length = 0;
         // create root FMVNode
-        let root = new Freemind.FMVNode(null, ctx, rootNode.getAttribute("TEXT"), "root", false);
+        let root = new Freemind.FMVRootNode(ctx, rootNode.getAttribute("TEXT"));
         fmvNodes.push(root);
         // Use root FMVNode as starting point and create all subFMVNodes
         createFMVNodes(rootNode, root);
@@ -157,11 +157,17 @@ var Freemind;
          }
        }
      } */
-    function keyboardInput(e) {
-        let type = e.type;
-        let key = e.key;
-        let code = e.code;
-        console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
+    function keyboardInput(_event) {
+        if (_event.keyCode == 32) {
+            // check if an input is currently in focus
+            if (document.activeElement.nodeName.toLowerCase() != "input") {
+                // prevent default spacebar event (scrolling to bottom)
+                _event.preventDefault();
+                Freemind.rootNodeX = canvas.width / 2;
+                Freemind.rootNodeY = canvas.height / 2;
+                redrawWithoutChildren();
+            }
+        }
     }
     function onMouseDown(_event) {
         hasMouseBeenMoved = false;
@@ -180,6 +186,7 @@ var Freemind;
         }
         else {
             for (let i = 0; i < fmvNodes.length; i++) {
+                console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
                 if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
                     fmvNodes[i].folded = !fmvNodes[i].folded;
                     fmvNodes[0].calculateVisibleChildren();
@@ -190,30 +197,91 @@ var Freemind;
     }
     function onPointerMove(_event) {
         hasMouseBeenMoved = true;
-        console.log(_event.buttons);
-        console.log(_event.type);
         if (_event.buttons == 1) {
             Freemind.rootNodeY += _event.movementY;
             Freemind.rootNodeX += _event.movementX;
             redrawWithoutChildren();
         }
     }
+    let ongoingTouches = [];
+    let cordX;
+    let cordY;
     function handleStart(_event) {
         _event.preventDefault();
-        console.log("touchstart.");
-        for (let i; i < _event.targetTouches.length; i++) {
-            console.log(_event.targetTouches[i].screenX + " screenx ");
-            console.log(_event.targetTouches[i].clientX + " clientx");
+        console.log(" touchstart");
+        let theTouchlist = _event.touches;
+        for (let i = 0; i < theTouchlist.length; i++) {
+            console.log("touchstart:" + i + "...");
+            ongoingTouches.push(copyTouch(theTouchlist[i]));
+            cordX = theTouchlist[i].clientX;
+            cordY = theTouchlist[i].clientY;
+            console.log("touchstart:" + i + ".");
         }
     }
     function handleMove(_event) {
+        let touches = _event.changedTouches;
+        console.log(touches.length);
+        for (let i = 0; i < touches.length; i++) {
+            let idx = ongoingTouchIndexById(touches[i].identifier);
+            console.log(idx + " idx");
+            let deltaX;
+            let deltaY;
+            let xStrich = touches[i].clientX;
+            let yStrich = touches[i].clientY;
+            deltaX = xStrich - cordX;
+            deltaY = yStrich - cordY;
+            Freemind.rootNodeX += deltaX;
+            Freemind.rootNodeY += deltaY;
+            console.log(deltaX, deltaY, cordX, cordY, xStrich, yStrich);
+            cordX = xStrich;
+            cordY = yStrich;
+            redrawWithoutChildren();
+            if (idx >= 0) {
+                ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
+            }
+            else {
+                console.log("can't figure out which touch to continue");
+            }
+        }
     }
     function handleEnd(_event) {
         _event.preventDefault();
+        let theTouchlist = _event.changedTouches;
+        for (var i = 0; i < theTouchlist.length; i++) {
+            var idx = ongoingTouchIndexById(theTouchlist[i].identifier);
+            if (idx >= 0) {
+                console.log(" end of touch");
+                ongoingTouches.splice(idx, 1); // remove it; we're done
+            }
+            else {
+                console.log("can't figure out which touch to end");
+            }
+        }
     }
-    function handleCancel(_event) { }
+    function handleCancel(_event) {
+        _event.preventDefault();
+        console.log("touchcancel.");
+        let touches = _event.changedTouches;
+        for (var i = 0; i < touches.length; i++) {
+            var idx = ongoingTouchIndexById(touches[i].identifier);
+            ongoingTouches.splice(idx, 1); // remove it; we're done
+        }
+    }
+    function copyTouch(touch) {
+        return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+    }
     function clearMap() {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clears the canvas
+    }
+    function ongoingTouchIndexById(idToFind) {
+        for (let i = 0; i < ongoingTouches.length; i++) {
+            let id = ongoingTouches[i].identifier;
+            console.log(id + " id");
+            if (id == idToFind) {
+                return i;
+            }
+        }
+        return -1; // not found
     }
     // parses URL parameters to object
     function getUrlSearchJson() {

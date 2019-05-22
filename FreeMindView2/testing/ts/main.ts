@@ -13,8 +13,9 @@ namespace Freemindtesting {
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
 
+  
   //let ishidden: boolean = true; // canvas sichtbar bei false
-
+  
   export let rootNodeX: number;
   export let rootNodeY: number;
   let mindmapData: XMLDocument;
@@ -23,12 +24,12 @@ namespace Freemindtesting {
   let root: FMVRootNode;
   let fmvNodes: FMVNode[];
   let hasMouseBeenMoved: boolean = false;
-
+  
   //let url: string;
-
+  
   function init(): void {
     fmvNodes = [];
-
+    
     params = getUrlSearchJson();
     if (params.list == undefined) {
       params.list = "false";
@@ -39,56 +40,57 @@ namespace Freemindtesting {
       params.list = "false";
     }
     //url = params.path + "/" + params.map;
-
+    
     fetchXML().then(() => {
       docNode = mindmapData.documentElement;
       rootNode = docNode.firstElementChild;
       if (params.list == "true") {
         //createList();
-
+        
       } else if (params.list == "false" || !params.list) {
-
+        
         createCanvas();
         createMindmap();
-
+        
       }
     });
     //document.getElementById('hideit').addEventListener('click', toggleHide);
     window.addEventListener('resize', resizecanvas, false);
-
-
+    
+    
   }
   async function fetchXML(): Promise<void> {
     const response: Response = await fetch('./mm/EIA2.mm');
-
+    
     const xmlText: string = await response.text();
     mindmapData = StringToXML(xmlText); // Save xml in letiable
   }
-
+  
   // parses a string to XML
   function StringToXML(xString: string): XMLDocument {
     return new DOMParser().parseFromString(xString, "text/xml");
   }
-
+  
   function createCanvas(): void {
-
+    
     canvas = document.getElementsByTagName("canvas")[0];
     /* canvas = document.createElement("canvas");
     canvas.id = "fmcanvas"; */
     canvas.setAttribute("height", "window.innerHeight");
     canvas.setAttribute("width", "window.innerWidth");
     //body.appendChild(canvas);
-
+    
     ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
-
+    
+    
     // match Canvas dimensions to browser window
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-
+    
     // determine the center of the canvas
     rootNodeX = ctx.canvas.width / 2;
     rootNodeY = ctx.canvas.height / 2;
-
+    
     // Eventlistener for draggable canvas
     //canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", onPointerMove);
@@ -100,7 +102,7 @@ namespace Freemindtesting {
     canvas.addEventListener("touchcancel", handleCancel, false);
     canvas.addEventListener("touchmove", handleMove, false);
     //  canvas.addEventListener("touchend",)
-
+    
   }
   function resizecanvas(): void {
     createCanvas();

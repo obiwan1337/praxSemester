@@ -1,4 +1,4 @@
-namespace Freemind {
+namespace Freemindtesting {
 
   interface URLObject {
     path: string;
@@ -13,21 +13,23 @@ namespace Freemind {
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
 
+  
   //let ishidden: boolean = true; // canvas sichtbar bei false
-
+  
   export let rootNodeX: number;
   export let rootNodeY: number;
   let mindmapData: XMLDocument;
   let docNode: Element; // document node is the first node in a xml file
   let rootNode: Element; // first actual node of the mindmap
+  let root: FMVRootNode;
   let fmvNodes: FMVNode[];
   let hasMouseBeenMoved: boolean = false;
-
+  
   //let url: string;
-
+  
   function init(): void {
     fmvNodes = [];
-
+    
     params = getUrlSearchJson();
     if (params.list == undefined) {
       params.list = "false";
@@ -38,73 +40,74 @@ namespace Freemind {
       params.list = "false";
     }
     //url = params.path + "/" + params.map;
-
+    
     fetchXML().then(() => {
       docNode = mindmapData.documentElement;
       rootNode = docNode.firstElementChild;
       if (params.list == "true") {
         //createList();
-
+        
       } else if (params.list == "false" || !params.list) {
-
+        
         createCanvas();
         createMindmap();
-
+        
       }
     });
     //document.getElementById('hideit').addEventListener('click', toggleHide);
     window.addEventListener('resize', resizecanvas, false);
-
-
+    
+    
   }
   async function fetchXML(): Promise<void> {
     const response: Response = await fetch('./mm/EIA2.mm');
-
+    
     const xmlText: string = await response.text();
     mindmapData = StringToXML(xmlText); // Save xml in letiable
   }
-
+  
   // parses a string to XML
   function StringToXML(xString: string): XMLDocument {
     return new DOMParser().parseFromString(xString, "text/xml");
   }
-
+  
   function createCanvas(): void {
-
+    
     canvas = document.getElementsByTagName("canvas")[0];
     /* canvas = document.createElement("canvas");
     canvas.id = "fmcanvas"; */
     canvas.setAttribute("height", "window.innerHeight");
     canvas.setAttribute("width", "window.innerWidth");
     //body.appendChild(canvas);
-
+    
     ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
-
+    
+    
     // match Canvas dimensions to browser window
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-
+    
     // determine the center of the canvas
     rootNodeX = ctx.canvas.width / 2;
     rootNodeY = ctx.canvas.height / 2;
-
+    
     // Eventlistener for draggable canvas
     //canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", onPointerMove);
     canvas.addEventListener("mousedown", onMouseDown);
     canvas.addEventListener("mouseup", onMouseUp);
-    canvas.addEventListener("keyboardinput", keyboardInput);
+    window.addEventListener("keydown", keyboardInput);
     canvas.addEventListener("touchstart", handleStart, false);
     canvas.addEventListener("touchend", handleEnd, false);
     canvas.addEventListener("touchcancel", handleCancel, false);
     canvas.addEventListener("touchmove", handleMove, false);
     //  canvas.addEventListener("touchend",)
-
+    
   }
   function resizecanvas(): void {
     createCanvas();
 
-    fmvNodes[0].drawFMVNode();
+    root.drawFMVNode();
 
   }
 
@@ -113,12 +116,9 @@ namespace Freemind {
     fmvNodes.length = 0;
 
     // create root FMVNode
-    let root: FMVNode = new FMVNode(
-      null,
+    root = new FMVRootNode(
       ctx,
       rootNode.getAttribute("TEXT"),
-      "root",
-      false
     );
     fmvNodes.push(root);
 
@@ -127,7 +127,7 @@ namespace Freemind {
     root.calculateVisibleChildren();
     root.setPosition(0);
     root.drawFMVNode();
-    console.log(fmvNodes, " fmvNodes");
+
 
 
   }
@@ -176,7 +176,7 @@ namespace Freemind {
     let childElements: Element[] = new Array();
     // get all children of parent as Element collection. Gets ALL children!
     childElementsCollection = parent.getElementsByTagName("node");
-    console.log(childElementsCollection.length + "child elementcollection length");
+
     for (let i: number = 0; i < childElementsCollection.length; i++) {
       if (childElementsCollection[i].parentElement == parent) {
         // save only the children with correct parent element
@@ -189,8 +189,8 @@ namespace Freemind {
   }
   function redrawWithoutChildren() {
     clearMap();
-    fmvNodes[0].setPosition(0);
-    fmvNodes[0].drawFMVNode();
+    root.setPosition(0);
+    root.drawFMVNode();
   }
   /*  function createNewEntry(_x: number, _y: number) {
  
@@ -202,13 +202,21 @@ namespace Freemind {
      }
    } */
 
-  function keyboardInput(e: KeyboardEvent): void {
-    let type: string = e.type;
-    let key: string = e.key;
-    let code: string = e.code;
+  function keyboardInput(_event: KeyboardEvent): void {
+    console.log(_event.keyCode);
+    if (_event.code == "Space") {
 
-    console.log(` yea boy keyboardinput ${type} ${key} ${code}`);
+      // check if an input is currently in focus
+      if (document.activeElement.nodeName.toLowerCase() != "input") {
+        // prevent default spacebar event (scrolling to bottom)
+        _event.preventDefault();
+        rootNodeX = canvas.width / 2;
+        rootNodeY = canvas.height / 2;
+        redrawWithoutChildren();
+      }
+    }
   }
+
   function onMouseDown(_event: MouseEvent): void {
     hasMouseBeenMoved = false;
   }
@@ -216,23 +224,29 @@ namespace Freemind {
     if (hasMouseBeenMoved) {
       return;
     }
-    console.log("mausnichtbewegt");
-    if (ctx.isPointInPath(fmvNodes[0].pfadrect, _event.clientX, _event.clientY) && fmvNodes[0].folded) {
-      for (let i: number = 0; i < fmvNodes.length; i++) {
-        fmvNodes[i].folded = false;
-        fmvNodes[0].calculateVisibleChildren();
-        redrawWithoutChildren();
+
+    if (ctx.isPointInPath(root.pfadrect, _event.clientX, _event.clientY)) {
+      root.hiddenFoldedValue = !root.hiddenFoldedValue;
+      let newFold: boolean = root.hiddenFoldedValue;
+      for (let i: number = 1; i < fmvNodes.length; i++) {
+        fmvNodes[i].folded = newFold;
       }
+
     } else {
-      for (let i: number = 0; i < fmvNodes.length; i++) {
+      for (let i: number = 1; i < fmvNodes.length; i++) {
         console.log(fmvNodes[i].pfadrect + " pfadrect " + _event.clientX, _event.clientY, i + " i");
-        if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
-          fmvNodes[i].folded = !fmvNodes[i].folded;
-          fmvNodes[0].calculateVisibleChildren();
-          redrawWithoutChildren();
+        if (fmvNodes[i].pfadrect) {
+          if (ctx.isPointInPath(fmvNodes[i].pfadrect, _event.clientX, _event.clientY)) {
+
+            fmvNodes[i].folded = !fmvNodes[i].folded;
+          }
         }
       }
     }
+    root.folded = false;
+    root.calculateVisibleChildren();
+    redrawWithoutChildren();
+
   }
   function onPointerMove(_event: MouseEvent): void {
     hasMouseBeenMoved = true;
@@ -338,6 +352,7 @@ namespace Freemind {
     }
     return -1;    // not found
   }
+
   // parses URL parameters to object
   function getUrlSearchJson(): URLObject {
     try {

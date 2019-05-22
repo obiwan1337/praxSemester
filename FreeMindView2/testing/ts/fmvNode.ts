@@ -31,7 +31,7 @@ namespace Freemindtesting {
             this.parent = parent;
             this.children = new Array();
             this.ctx = ctx;
-            this.contentWidth = ctx.measureText(content).width;
+            
             this.content = content;
             this.mapPosition = side;
 
@@ -91,9 +91,10 @@ namespace Freemindtesting {
         }
 
         drawFMVNode(): void {
-
+            this.ctx.font = "14px sans-serif";
+            this.ctx.fillStyle = "black";
             let startX: number;
-
+            this.contentWidth = this.ctx.measureText(this.content).width;
             //rectangles um den text
             if (this.mapPosition == "left") {
                 startX = this.posX;
@@ -108,7 +109,7 @@ namespace Freemindtesting {
                 this.ctx.stroke(this.pfadrect);
             }
             if (this.parent) {
-
+                
                 // verbindungslinie von kasten zu kasten
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.posX, this.posY);
@@ -133,10 +134,8 @@ namespace Freemindtesting {
             }
             this.ctx.stroke();
             /* this.ctx.closePath(); */
+            
             this.ctx.beginPath();
-            this.ctx.font = "14px sans-serif";
-            this.ctx.fillStyle = "black";
-
             if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
 
@@ -169,14 +168,12 @@ namespace Freemindtesting {
         }
 
         drawFMVNode() {
-
-            this.ctx.beginPath();
-            this.ctx.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth, 0, 0, 2 * Math.PI);
+            this.ctx.font = "14px sans-serif";
+            this.ctx.fillStyle = "black";
+            this.contentWidth = this.ctx.measureText(this.content).width;
             this.pfadrect = new Path2D();
-            this.pfadrect.rect(rootNodeX + this.contentWidth / 2, rootNodeY + 5, -this.contentWidth, -25);
+            this.pfadrect.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth/2, 0, 0, 2 * Math.PI);
             this.ctx.stroke(this.pfadrect);
-            this.ctx.stroke();
-            this.ctx.closePath();
 
             super.drawFMVNode();
         }

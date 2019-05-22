@@ -168,4 +168,6 @@ var KEY;
     //android
     KEY["SLEEP"] = "Sleep";
 })(KEY || (KEY = {}));
+/* Firefox druck, Schift +F10, Shift+Numpad5, CTRL+q, CTRL+F4, ALT+F1, ALT+F2, ALT+F3, ALT+F7, ALT+F8, ALT+F10
+Opera Float32Array, F11, ALT, CTRL+q, CTRL+T, CTRL+H, CTRL+G, CTRL+N, CTRL+F */ 
 //# sourceMappingURL=EnumTs.js.map
