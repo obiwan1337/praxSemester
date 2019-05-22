@@ -12,5 +12,10 @@ table.id ='ultratabelle'
 function keymirror(_event) {
     _event.preventDefault();
     table.innerHTML += "<tr><td>" + _event.key +"</td><td> "+ _event.keycode + " </td><td> "+ _event.code + " </td>";   
+    bottom();
 }
-document.getElementById( 'bottom' ).scrollIntoView();
+
+function bottom():void {
+    document.getElementById( 'bottom' ).scrollIntoView();
+    
+};
