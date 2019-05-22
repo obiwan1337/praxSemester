@@ -2,10 +2,10 @@
 #ultratabelle {
     position: relative;
     left: 5px;
-    float: left;
 }
-#bildchen {
-    position: sticky;
-    right: 5px;
+img {
+    position: fixed;
+    right: 100px;
+    top: 150px;
     
 }
