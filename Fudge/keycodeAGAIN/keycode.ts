@@ -13,3 +13,4 @@ function keymirror(_event) {
     _event.preventDefault();
     table.innerHTML += "<tr><td>" + _event.key +"</td><td> "+ _event.keycode + " </td><td> "+ _event.code + " </td>";   
 }
+document.getElementById( 'bottom' ).scrollIntoView();
