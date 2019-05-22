@@ -1,10 +1,10 @@
-
-#ultratabelle{
+#ultratabelle {
     position: absolute;
     left: 5px;
 }
-#bildchenfürjirka {
-    position:sticky;
-    right:5px;
-    left:5px;
+
+#bildchen {
+    position: sticky;
+    right: 5px;
+    left: 5px;
 }

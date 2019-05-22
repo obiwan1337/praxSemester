@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", init);
 
-let table:HTMLTableElement;
+let table:HTMLElement;
 function init() {
 document.addEventListener("keydown", keymirror);
 
-table = <HTMLTableElement>(document.createElement('table'));
+table = <HTMLTableElement>document.getElementById('ultratabelle');
 table.innerHTML += "<tr><th> key </th><th> keycode </th><th> code </th>";
 table.id ='ultratabelle'
 }

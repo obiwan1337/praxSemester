@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", init);
 let table;
 function init() {
     document.addEventListener("keydown", keymirror);
-    table = (document.createElement('table'));
+    table = document.getElementById('ultratabelle');
     table.innerHTML += "<tr><th> key </th><th> keycode </th><th> code </th>";
     table.id = 'ultratabelle';
 }
