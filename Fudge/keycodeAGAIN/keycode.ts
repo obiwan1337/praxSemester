@@ -5,6 +5,7 @@ function init() {
 document.addEventListener("keydown", keymirror);
 
 table = <HTMLTableElement>document.getElementById('ultratabelle');
+
 table.innerHTML += "<tr><th> key </th><th> keycode </th><th> code </th>";
 table.id ='ultratabelle'
 }
