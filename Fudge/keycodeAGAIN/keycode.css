@@ -4,9 +4,13 @@
 }
 
 #fantasy {
-    float:left;
+    
     position: fixed;
     right: 100px;
     top: 150px;
 
+}
+#fantasy.img {
+
+    float: left;
 }
