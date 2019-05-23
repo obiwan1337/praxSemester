@@ -154,9 +154,9 @@ var KEY;
     KEY["LAUNCH_APP1"] = "LaunchApp1";
     KEY["LAUNCH_MAIL"] = "LaunchMail";
     KEY["LAUNCH_MEDIA_PLAYER"] = "LaunchMediaPlayer";
-    //mac
+    //mac brings this buttton
     KEY["FN"] = "Fn";
-    //Linux
+    //Linux brings these
     KEY["AGAIN"] = "Again";
     KEY["PROPS"] = "Props";
     KEY["SELECT"] = "Select";
@@ -168,6 +168,19 @@ var KEY;
     //android
     KEY["SLEEP"] = "Sleep";
 })(KEY || (KEY = {}));
-/* Firefox druck, Schift +F10, Shift+Numpad5, CTRL+q, CTRL+F4, ALT+F1, ALT+F2, ALT+F3, ALT+F7, ALT+F8, ALT+F10
-Opera Float32Array, F11, ALT, CTRL+q, CTRL+T, CTRL+H, CTRL+G, CTRL+N, CTRL+F */ 
+/*
+Firefox can't make use of those buttons and Combinations:
+SINGELE_BUTTONS:
+ Druck,
+COMBINATIONS:
+ Shift + F10, Shift + Numpad5,
+ CTRL + q, CTRL + F4,
+ ALT + F1, ALT + F2, ALT + F3, ALT + F7, ALT + F8, ALT + F10
+Opera won't do good with these Buttons and combinations:
+SINGLE_BUTTONS:
+ Float32Array, F11, ALT,
+COMBINATIONS:
+ CTRL + q, CTRL + t, CTRL + h, CTRL + g, CTRL + n, CTRL + f
+ ALT + F1, ALT + F2, ALT + F4, ALT + F5, ALT + F6, ALT + F7, ALT + F8, ALT + F10
+ */ 
 //# sourceMappingURL=EnumTs.js.map
