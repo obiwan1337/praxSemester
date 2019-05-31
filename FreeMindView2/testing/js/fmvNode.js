@@ -68,18 +68,27 @@ var Freemindtesting;
             this.ctx.fillStyle = "black";
             let startX;
             this.contentWidth = this.ctx.measureText(this.content).width;
+            let krais = new Path2D();
             //rectangles um den text
             if (this.mapPosition == "left") {
                 startX = this.posX;
+                if (this.children.length > 0 && this.folded) {
+                    krais.arc(startX - this.contentWidth, this.posY, 4, 0, Math.PI * 2);
+                    this.ctx.stroke(krais);
+                }
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, -this.contentWidth, -25);
-                this.ctx.stroke(this.pfadrect);
+                //this.ctx.stroke(this.pfadrect);
             }
             else if (this.mapPosition == "right") {
                 startX = this.posX;
+                if (this.children.length > 0 && this.folded) {
+                    krais.arc(startX + this.contentWidth, this.posY, 4, 0, Math.PI * 2);
+                    this.ctx.stroke(krais);
+                }
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, this.contentWidth, -25);
-                this.ctx.stroke(this.pfadrect);
+                //this.ctx.stroke(this.pfadrect);
             }
             if (this.parent) {
                 // verbindungslinie von kasten zu kasten

@@ -203,7 +203,9 @@ namespace Freemindtesting {
    } */
 
   function keyboardInput(_event: KeyboardEvent): void {
-    console.log(_event.keyCode);
+    console.log(_event.key);
+    console.log(_event.code);
+    
     if (_event.code == "Space") {
 
       // check if an input is currently in focus
