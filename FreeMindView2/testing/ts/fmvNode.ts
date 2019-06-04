@@ -112,6 +112,7 @@ namespace Freemindtesting {
                 if(this.children.length>0 && this.folded)
                 {
                     krais.arc(startX+this.contentWidth, this.posY, 4, 0, Math.PI*2);
+                    this.ctx.strokeStyle  = "black"
                     this.ctx.stroke(krais);
                 }
                 this.pfadrect = new Path2D();
