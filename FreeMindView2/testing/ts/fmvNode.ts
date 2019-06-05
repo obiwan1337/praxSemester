@@ -100,7 +100,10 @@ namespace Freemindtesting {
             if (this.mapPosition == "left") {
                 startX = this.posX;
                 if (this.children.length > 0 && this.folded) {
-                    childIndicator.arc(startX - this.contentWidth, this.posY, 4, 0, Math.PI * 2);
+                        childIndicator.moveTo(startX - this.contentWidth - 4, this.posY - 5);
+                        childIndicator.lineTo(startX - this.contentWidth - 8, this.posY);
+                        childIndicator.lineTo(startX - this.contentWidth - 4, this.posY + 5);
+                        this.ctx.stroke(childIndicator);
                     this.ctx.stroke(childIndicator);
                 }
                 this.pfadrect = new Path2D();

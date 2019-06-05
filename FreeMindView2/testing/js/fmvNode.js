@@ -68,13 +68,16 @@ var Freemindtesting;
             this.ctx.fillStyle = "black";
             let startX;
             this.contentWidth = this.ctx.measureText(this.content).width;
-            let krais = new Path2D();
+            let childIndicator = new Path2D();
             //rectangles um den text
             if (this.mapPosition == "left") {
                 startX = this.posX;
                 if (this.children.length > 0 && this.folded) {
-                    krais.arc(startX - this.contentWidth, this.posY, 4, 0, Math.PI * 2);
-                    this.ctx.stroke(krais);
+                    childIndicator.moveTo(startX - this.contentWidth - 4, this.posY - 5);
+                    childIndicator.lineTo(startX - this.contentWidth - 8, this.posY);
+                    childIndicator.lineTo(startX - this.contentWidth - 4, this.posY + 5);
+                    this.ctx.stroke(childIndicator);
+                    this.ctx.stroke(childIndicator);
                 }
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, -this.contentWidth, -25);
@@ -83,9 +86,10 @@ var Freemindtesting;
             else if (this.mapPosition == "right") {
                 startX = this.posX;
                 if (this.children.length > 0 && this.folded) {
-                    krais.arc(startX + this.contentWidth, this.posY, 4, 0, Math.PI * 2);
-                    this.ctx.strokeStyle = "black";
-                    this.ctx.stroke(krais);
+                    childIndicator.moveTo(startX + this.contentWidth + 4, this.posY - 5);
+                    childIndicator.lineTo(startX + this.contentWidth + 8, this.posY);
+                    childIndicator.lineTo(startX + this.contentWidth + 4, this.posY + 5);
+                    this.ctx.stroke(childIndicator);
                 }
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, this.contentWidth, -25);
