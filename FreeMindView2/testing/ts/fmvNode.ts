@@ -104,7 +104,7 @@ namespace Freemindtesting {
                         childIndicator.lineTo(startX - this.contentWidth - 8, this.posY);
                         childIndicator.lineTo(startX - this.contentWidth - 4, this.posY + 5);
                         this.ctx.stroke(childIndicator);
-                    this.ctx.stroke(childIndicator);
+                    
                 }
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, -this.contentWidth, -25);
