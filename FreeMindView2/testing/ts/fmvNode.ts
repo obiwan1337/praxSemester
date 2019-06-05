@@ -31,7 +31,7 @@ namespace Freemindtesting {
             this.parent = parent;
             this.children = new Array();
             this.ctx = ctx;
-            
+
             this.content = content;
             this.mapPosition = side;
 
@@ -95,32 +95,31 @@ namespace Freemindtesting {
             this.ctx.fillStyle = "black";
             let startX: number;
             this.contentWidth = this.ctx.measureText(this.content).width;
-            let krais: Path2D = new Path2D();
+            let childIndicator: Path2D = new Path2D();
             //rectangles um den text
             if (this.mapPosition == "left") {
                 startX = this.posX;
-                if(this.children.length>0 && this.folded)
-                {
-                    krais.arc(startX-this.contentWidth, this.posY, 4, 0, Math.PI*2);
-                    this.ctx.stroke(krais);
+                if (this.children.length > 0 && this.folded) {
+                    childIndicator.arc(startX - this.contentWidth, this.posY, 4, 0, Math.PI * 2);
+                    this.ctx.stroke(childIndicator);
                 }
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, -this.contentWidth, -25);
                 //this.ctx.stroke(this.pfadrect);
             } else if (this.mapPosition == "right") {
                 startX = this.posX;
-                if(this.children.length>0 && this.folded)
-                {
-                    krais.arc(startX+this.contentWidth, this.posY, 4, 0, Math.PI*2);
-                    this.ctx.strokeStyle  = "black"
-                    this.ctx.stroke(krais);
+                if (this.children.length > 0 && this.folded) {
+                    childIndicator.moveTo(startX + this.contentWidth + 4, this.posY - 5);
+                    childIndicator.lineTo(startX + this.contentWidth + 8, this.posY);
+                    childIndicator.lineTo(startX + this.contentWidth + 4, this.posY + 5);
+                    this.ctx.stroke(childIndicator);
                 }
                 this.pfadrect = new Path2D();
                 this.pfadrect.rect(startX, this.posY + 5, this.contentWidth, -25);
                 //this.ctx.stroke(this.pfadrect);
             }
             if (this.parent) {
-                
+
                 // verbindungslinie von kasten zu kasten
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.posX, this.posY);
@@ -145,7 +144,7 @@ namespace Freemindtesting {
             }
             this.ctx.stroke();
             /* this.ctx.closePath(); */
-            
+
             this.ctx.beginPath();
             if (this.mapPosition == "root") {
                 this.ctx.textAlign = "center";
@@ -183,7 +182,7 @@ namespace Freemindtesting {
             this.ctx.fillStyle = "black";
             this.contentWidth = this.ctx.measureText(this.content).width;
             this.pfadrect = new Path2D();
-            this.pfadrect.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth/2, 0, 0, 2 * Math.PI);
+            this.pfadrect.ellipse(this.posX, this.posY, this.contentWidth, this.contentWidth / 2, 0, 0, 2 * Math.PI);
             this.ctx.stroke(this.pfadrect);
 
             super.drawFMVNode();
