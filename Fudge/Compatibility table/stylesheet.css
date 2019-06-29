@@ -1,0 +1,32 @@
+table {
+    border: 1;
+    border-style: solid;
+    border-color: blue;
+    color: black;
+}
+
+td {
+    border-style: solid;
+    border-color: blue;
+    border: ridge;
+}
+
+#hiddenStandard {
+    visibility: hidden;
+}
+
+.compatible {
+    background: limegreen;
+    color: inherit;
+    font-weight: 400;
+}
+
+.incompatible {
+    background: salmon;
+    color: inherit;
+}
+
+.neutral {
+    color: inherit;
+    background: darkgrey;
+}

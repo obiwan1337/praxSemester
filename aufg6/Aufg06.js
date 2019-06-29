@@ -16,25 +16,26 @@ var aufg6;
             form.appendChild(fieldset);
             console.log(aufg6.Angebot[key].length + "key length");
             for (let i = 0; i < aufg6.Angebot[key].length; i++) {
-                let AktuellesProdukt = aufg6.Angebot[key][i];
+                let aktuellesProdukt = aufg6.Angebot[key][i];
                 let label = document.createElement("label");
                 console.log("Lable created");
                 label.innerHTML = aufg6.Angebot[key][i].name + " " + aufg6.Angebot[key][i].price;
                 let childinput = document.createElement("input");
                 console.log("input created");
-                childinput.setAttribute("type", AktuellesProdukt.input);
+                childinput.setAttribute("type", aktuellesProdukt.input);
                 childinput.id = `${key}` + "_" + `${i}`;
-                if (AktuellesProdukt.input == "radio") {
+                if (aktuellesProdukt.input == "radio") {
                     childinput.name = key + "radio";
                 }
                 else {
-                    childinput.name = AktuellesProdukt.name;
+                    childinput.name = aktuellesProdukt.name;
                 }
-                if (AktuellesProdukt.input == "number") {
+                if (aktuellesProdukt.input == "number") {
                     childinput.value = "0";
                     childinput.min = "0";
                 }
-                else { }
+                else { //
+                }
                 label.appendChild(childinput);
                 fieldset.appendChild(label);
             }

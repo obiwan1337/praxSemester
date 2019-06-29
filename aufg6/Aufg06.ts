@@ -12,28 +12,29 @@ namespace aufg6 {
         form.id = "form1"
         document.getElementsByTagName("body")[0].appendChild(form);
         for (let key in _Angebotarray) {
-            let fieldset = document.createElement("fieldset");
+            let fieldset:HTMLFieldSetElement = document.createElement("fieldset");
             fieldset.id = key;
             form.appendChild(fieldset);
             console.log(Angebot[key].length + "key length");
             for (let i: number = 0; i < Angebot[key].length; i++) {
-                let AktuellesProdukt: einzelPosten = Angebot[key][i];
+                let aktuellesProdukt: einzelPosten = Angebot[key][i];
                 let label: HTMLLabelElement = document.createElement("label");
                 console.log("Lable created");
                 label.innerHTML = Angebot[key][i].name + " " + Angebot[key][i].price;
                 let childinput: HTMLInputElement = document.createElement("input");
                 console.log("input created");
-                childinput.setAttribute("type", AktuellesProdukt.input);
+                childinput.setAttribute("type", aktuellesProdukt.input);
                 childinput.id = `${key}` + "_" + `${i}`;
-                if (AktuellesProdukt.input == "radio") {
+                if (aktuellesProdukt.input == "radio") {
                     childinput.name = key + "radio";
                 } else {
-                    childinput.name = AktuellesProdukt.name;
+                    childinput.name = aktuellesProdukt.name;
                 }
-                if (AktuellesProdukt.input == "number") {
+                if (aktuellesProdukt.input == "number") {
                     childinput.value = "0";
                     childinput.min = "0";
-                } else { }
+                } else { //
+                 }
                 label.appendChild(childinput);
                 fieldset.appendChild(label);
             }
@@ -81,7 +82,7 @@ namespace aufg6 {
             }
 
         }
-        let textarea = document.getElementById("review");
+        let textarea: HTMLElement = document.getElementById("review");
         childnode += "\n" + "Gesamtpreis: " + zwischensumme + " €";
         textarea.innerText = childnode;
     }
